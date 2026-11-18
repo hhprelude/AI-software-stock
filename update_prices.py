@@ -1,124 +1,105 @@
 #!/usr/bin/env python3
-"""Daily, split/dividend-adjusted prices for the AI RS dashboard.
+"""Fetch adjusted daily closes for the AI sector dashboard (no paid API / AI tokens).
 
-Designed for GitHub Actions after the US market closes. No brokerage API keys.
-Yahoo Finance via yfinance is an unofficial feed; a failed/stale download blocks
-publication rather than silently publishing an incomplete leaderboard.
-
-Local usage:
-    python -m pip install -r requirements.txt
-    python update_prices.py
+Fail closed: missing / stale ticker prices do NOT silently replace previously
+published data. All price observations are real shared trading dates, with no
+forward fill. Yahoo/yfinance is an unofficial price source; validate externally.
 """
 from __future__ import annotations
 
 from datetime import datetime, timezone
 from pathlib import Path
+import csv
 import os
 import sys
 import time
 
-TICKERS = (
-    'IGV', 'SMH', 'SPY',  # sector/market benchmarks
-    'NET', 'CRWD', 'MSFT', 'IOT', 'SNOW', 'PLTR', 'DDOG', 'NOW',
-    'CRM', 'ESTC', 'PATH', 'APP', 'PANW',  # software companies
-    'AMD', 'ANET', 'AVGO', 'NVDA', 'MU', 'TSM',  # hardware companies
-)
-REQUIRED = set(TICKERS)
+ETF = ('IGV', 'SMH', 'SPY', 'QQQ')
+SOFTWARE = ('NET', 'CRWD', 'MSFT', 'IOT', 'SNOW', 'PLTR', 'DDOG', 'NOW',
+            'CRM', 'ESTC', 'PATH', 'APP', 'PANW')
+HARDWARE = ('AMD', 'ANET', 'AVGO', 'NVDA', 'MU', 'TSM')
+TICKERS = ETF + SOFTWARE + HARDWARE
 DEST = Path(__file__).resolve().parent / 'data' / 'ai_rs_latest.csv'
+MIN_HISTORY = 600
+KEEP_HISTORY = 950  # approx. 3.8 calendar years: MA200 and 60d forward tests
 
 
 def fetch():
     import pandas as pd
     import yfinance as yf
 
-    source = yf.download(
-        tickers=' '.join(TICKERS),
-        period='18mo',
-        interval='1d',
-        auto_adjust=True,
-        progress=False,
-        group_by='ticker',
-        threads=True,
+    data = yf.download(
+        tickers=' '.join(TICKERS), period='5y', interval='1d',
+        auto_adjust=True, group_by='ticker', progress=False,
+        threads=True, timeout=25,
     )
-    if source.empty:
-        raise RuntimeError('Empty Yahoo Finance response')
+    if data.empty:
+        raise RuntimeError('Yahoo Finance returned an empty price table')
 
     closes = {}
     for ticker in TICKERS:
-        cols = source.columns
-        if isinstance(cols, pd.MultiIndex):
-            col = (ticker, 'Close') if (ticker, 'Close') in cols else ('Close', ticker)
-            if col not in cols:
-                raise RuntimeError(f'Missing symbol/Close data: {ticker}')
-            series = source[col]
-        elif len(TICKERS) == 1 and 'Close' in cols:
-            series = source['Close']
+        columns = data.columns
+        if isinstance(columns, pd.MultiIndex):
+            col = ((ticker, 'Close') if (ticker, 'Close') in columns else
+                   ('Close', ticker))
+            if col not in columns:
+                raise RuntimeError(f'No Close column for {ticker}')
+            values = data[col]
         else:
-            raise RuntimeError('Unexpected yfinance response shape')
+            raise RuntimeError('Unexpected yfinance response layout')
+        values = pd.to_numeric(values, errors='coerce').dropna()
+        index = pd.DatetimeIndex(values.index)
+        if index.tz is not None:
+            index = index.tz_convert(None)
+        values.index = index.normalize()
+        values = values[(values > 0) & (~values.index.duplicated(keep='last'))]
+        if len(values) < MIN_HISTORY:
+            raise RuntimeError(f'Insufficient history for {ticker}: {len(values)} days')
+        closes[ticker] = values
 
-        series = pd.to_numeric(series, errors='coerce').dropna()
-        series.index = pd.DatetimeIndex(series.index).tz_localize(None).normalize()
-        series = series[(series > 0) & (~series.index.duplicated(keep='last'))]
-        if len(series) < 180:
-            raise RuntimeError(f'Insufficient observations for {ticker}: {len(series)}')
-        closes[ticker] = series
+    # A real observation is required for every ticker on every published day.
+    # Do not forward fill absent prices into artificial zero-return sessions.
+    common = sorted(set.intersection(*(set(s.index) for s in closes.values())))
+    if len(common) < MIN_HISTORY:
+        raise RuntimeError(f'Insufficient common trading days: {len(common)}')
 
-    if set(closes) != REQUIRED:
-        raise RuntimeError('Incomplete universe')
+    latest = common[-1]
+    latest_bench = min(closes[t].index.max() for t in ETF)
+    if latest != latest_bench:
+        raise RuntimeError(f'Missing latest ticker observations: common={latest.date()}, benchmarks={latest_bench.date()}')
+    lag = (datetime.now(timezone.utc).date() - latest.date()).days
+    if lag < 0 or lag > 6:
+        raise RuntimeError(f'Stale or future latest day {latest.date()} ({lag} calendar days)')
 
-    # Use only dates on which every ticker has a true observation.
-    # No forward fills (which would create fictitious zero returns).
-    common = sorted(set.intersection(*(set(series.index) for series in closes.values())))
-    if len(common) < 180:
-        raise RuntimeError(f'Only {len(common)} common trading days available')
-
-    latest_common = common[-1]
-    latest_etf = min(closes[t].index.max() for t in ('IGV', 'SMH', 'SPY'))
-    if latest_common < latest_etf:
-        raise RuntimeError(f'Incomplete latest date: common={latest_common.date()}, ETF={latest_etf.date()}')
-
-    age_days = (datetime.now(timezone.utc).date() - latest_common.date()).days
-    if age_days < 0 or age_days > 6:
-        raise RuntimeError(f'Unexpected or stale last trading day: {latest_common.date()} ({age_days} days old)')
-
-    # Include a full calendar-year boundary for YTD and at least six months
-    # of history, even during the first half of the next year.
-    common = common[-380:]
-    rows = []
-    for date in common:
-        for ticker in TICKERS:
-            price = float(closes[ticker].loc[date])
-            rows.append((date.strftime('%Y-%m-%d'), ticker, round(price, 6)))
-    return rows, str(common[-1].date()), len(common)
+    days = common[-KEEP_HISTORY:]
+    rows = [(day.strftime('%Y-%m-%d'), ticker,
+             f'{float(closes[ticker].loc[day]):.6f}')
+            for day in days for ticker in TICKERS]
+    return rows, str(latest.date()), len(days)
 
 
-def write_csv(rows):
-    import csv
-
+def write(rows):
     DEST.parent.mkdir(parents=True, exist_ok=True)
-    temp = DEST.with_suffix('.csv.tmp')
-    with temp.open('w', encoding='utf-8', newline='') as out:
-        writer = csv.writer(out)
+    temporary = DEST.with_suffix('.tmp')
+    with temporary.open('w', newline='', encoding='utf-8') as fh:
+        writer = csv.writer(fh)
         writer.writerow(('Date', 'Ticker', 'AdjClose'))
         writer.writerows(rows)
-    os.replace(temp, DEST)
-    return DEST
+    os.replace(temporary, DEST)
 
 
 def main():
-    last_exc = None
     for attempt in range(1, 4):
         try:
-            rows, latest, days = fetch()
-            path = write_csv(rows)
-            print(f'OK: {len(TICKERS)} tickers · {days} days · latest {latest} · {path}')
+            rows, last, count = fetch()
+            write(rows)
+            print(f'OK: {len(TICKERS)} symbols × {count} days; latest={last}; CSV={DEST}')
             return 0
         except Exception as exc:
-            last_exc = exc
-            print(f'Attempt {attempt}/3 failed: {exc}', file=sys.stderr)
+            print(f'Price attempt {attempt}/3 failed: {exc}', file=sys.stderr)
             if attempt < 3:
                 time.sleep(20 * attempt)
-    print(f'FAILED: prior published CSV left unchanged ({last_exc})', file=sys.stderr)
+    print('FAILED: kept previously published prices unchanged', file=sys.stderr)
     return 1
 
 
