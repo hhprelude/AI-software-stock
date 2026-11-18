@@ -1,8 +1,9 @@
 name: AI RS daily prices and dashboard
 
 on:
-  # 09:37 KST Tue–Sat, after the prior US trading day has closed.
   schedule:
+    # Tue–Sat 00:37 UTC = 09:37 KST, after most US market closes.
+    # GitHub scheduled runs may be delayed or occasionally skipped.
     - cron: '37 0 * * 2-6'
   workflow_dispatch:
   push:
@@ -10,11 +11,12 @@ on:
     paths:
       - 'index.html'
       - 'update_prices.py'
+      - 'update_rates.py'
       - 'requirements.txt'
       - '.github/workflows/daily.yml'
 
 permissions:
-  contents: write   # preserve daily data in the repository
+  contents: write
   pages: write
   id-token: write
 
@@ -29,40 +31,44 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Get dashboard source
-        uses: actions/checkout@v4
+      - name: Checkout dashboard
+        uses: actions/checkout@v7
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
           cache: pip
-      - name: Install price-feed library
+      - name: Install requirements
         run: python -m pip install -r requirements.txt
-      - name: Download prices and validate completeness
+      - name: Fetch and validate adjusted price data (required)
         run: python update_prices.py
-      - name: Preserve latest successfully verified data
+      - name: Fetch US 2y and 10y Treasury rates (optional)
+        run: |
+          python update_rates.py || echo 'FRED was unavailable: keeping any previously published yield data.'
+      - name: Commit validated CSVs
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add data/ai_rs_latest.csv
+          if [ -f data/us_treasury_latest.csv ]; then git add data/us_treasury_latest.csv; fi
           if ! git diff --cached --quiet; then
-            git commit -m 'data: update AI relative strength prices'
+            git commit -m 'data: update AI relative strength prices and rates'
             git push origin HEAD:main
           else
-            echo 'No changed daily prices to commit.'
+            echo 'No data changes.'
           fi
-      - name: Build public site
+      - name: Build static Pages site
         run: |
           mkdir -p _site/data
           cp index.html _site/index.html
-          cp data/ai_rs_latest.csv _site/data/ai_rs_latest.csv
+          cp -a data/. _site/data/
           touch _site/.nojekyll
-      - name: Configure GitHub Pages
+      - name: Configure Pages
         uses: actions/configure-pages@v5
-      - name: Upload site
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: _site
-      - name: Publish site
+      - name: Publish website
         id: deployment
         uses: actions/deploy-pages@v4
