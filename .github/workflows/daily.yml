@@ -1,67 +1,86 @@
-name: AI RS daily prices and dashboard
-
+name: AI Investment Radar 3 - validate, refresh, publish
 on:
   schedule:
-    # Tue–Sat 00:37 UTC = 09:37 KST, after most US market closes.
-    # GitHub scheduled runs may be delayed or occasionally skipped.
+    # Tue-Sat 00:37 UTC = 09:37 KST, after US market closes, delays possible.
     - cron: '37 0 * * 2-6'
   workflow_dispatch:
   push:
     branches: [main]
     paths:
       - 'index.html'
+      - 'config.py'
+      - 'analysis.py'
       - 'update_prices.py'
       - 'update_rates.py'
+      - 'update_fundamentals.py'
       - 'requirements.txt'
+      - 'selftest.py'
       - '.github/workflows/daily.yml'
-
 permissions:
   contents: write
   pages: write
   id-token: write
-
 concurrency:
-  group: ai-rs-pages
+  group: ai-radar-publish
   cancel-in-progress: false
-
 jobs:
-  update-and-publish:
+  validate-update-publish:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
     steps:
-      - name: Checkout dashboard
-        uses: actions/checkout@v7
-      - name: Set up Python
-        uses: actions/setup-python@v7
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
           cache: pip
-      - name: Install requirements
-        run: python -m pip install -r requirements.txt
-      - name: Fetch and validate adjusted price data (required)
-        run: python update_prices.py
-      - name: Fetch US 2y and 10y Treasury rates (optional)
+      - name: Install Python requirements and tests
         run: |
-          python update_rates.py || echo 'FRED was unavailable: keeping any previously published yield data.'
-      - name: Commit validated CSVs
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt pytest
+      - name: Offline analysis and finance logic tests
+        run: python -m pytest -q selftest.py
+      - name: Download & strictly validate daily adjusted prices
+        run: python update_prices.py
+      - name: Build analysis + next-session execution backtest
+        run: python analysis.py
+      - name: Optional Treasury yield refresh
+        run: python update_rates.py || echo 'FRED unavailable; prior yield file preserved.'
+      - name: Weekly / manual optional SEC reported fundamentals and Yahoo indicative quote
+        run: |
+          # UTC Friday is Saturday in Korea; also run on manual dispatch and initial push.
+          if [ "$(date -u +%u)" = "5" ] || [ "${{ github.event_name }}" != "schedule" ]; then
+            python update_fundamentals.py || echo 'Finance feed unavailable; previous report preserved.'
+          else
+            echo 'Keeping previously verified weekly financial report.'
+          fi
+      - name: Commit only successful validated data
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/ai_rs_latest.csv
-          if [ -f data/us_treasury_latest.csv ]; then git add data/us_treasury_latest.csv; fi
+          git add data/analysis_latest.json
+          for f in data/us_treasury_latest.csv data/fundamentals_latest.json; do
+            if [ -f "$f" ]; then git add "$f"; fi
+          done
           if ! git diff --cached --quiet; then
-            git commit -m 'data: update AI relative strength prices and rates'
+            git commit -m 'data: AI radar 3 validated daily prices and financial snapshot'
             git push origin HEAD:main
           else
-            echo 'No data changes.'
+            echo 'No changes to publish.'
           fi
-      - name: Build static Pages site
+      - name: Prepare GitHub Pages
         run: |
           mkdir -p _site/data
           cp index.html _site/index.html
-          cp -a data/. _site/data/
+          cp data/analysis_latest.json _site/data/analysis_latest.json
+          for f in data/us_treasury_latest.csv data/fundamentals_latest.json; do
+            if [ -f "$f" ]; then cp "$f" "_site/data/$(basename "$f")"; fi
+          done
           touch _site/.nojekyll
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -69,6 +88,6 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: _site
-      - name: Publish website
+      - name: Deploy Pages
         id: deployment
         uses: actions/deploy-pages@v4
