@@ -1,416 +1,132 @@
-<!doctype html>
-<html lang="ko">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0a1020">
-<meta name="description" content="AI 하드웨어·소프트웨어 업종 및 개별주 상대강도, 절대추세, 선도주 확산, 미국 국채금리, 과거 신호 검증 대시보드">
-<title>AI 투자 레이더 2.0 · 소프트웨어 × 하드웨어</title>
+<!doctype html><html lang="ko"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AI Investment Radar 3.0 — 리스크·실적·검증</title>
+<meta name="description" content="AI 하드웨어/소프트웨어 투자 국면 및 선도주 탐지. 가격·재무·금리 출처와 검증을 구분한 자동 업데이트 대시보드."/>
 <style>
-:root {color-scheme:dark; --bg:#090f1c;--panel:#111c2e;--panel2:#15243a;--line:#293950;--soft:#4ccbed;--hard:#f5bf68;--positive:#70deb4;--negative:#fa8799;--muted:#98abc3;--text:#ebf4ff;--white:#fff;--amber:#e9c078}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse 70% 24% at 10% 0%,#182d4d 0%,transparent 70%),var(--bg);color:var(--text);font:14px/1.5 Inter,Pretendard,-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif}a{color:#8bdcff}button,select,input{font:inherit}button{cursor:pointer}button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--soft);outline-offset:2px}.wrap{max-width:1510px;margin:0 auto;padding:26px 28px 65px}.row{display:flex;align-items:center;gap:10px}.between{justify-content:space-between}.wrap-row{flex-wrap:wrap}.grow{flex:1}.top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:17px;flex-wrap:wrap}.eyebrow{font-size:11px;letter-spacing:.22em;color:var(--soft);font-weight:800}h1{font-size:clamp(27px,3.5vw,42px);margin:6px 0;line-height:1.13;letter-spacing:-1.5px}p{margin:.3em 0}.lead{max-width:830px;color:var(--muted);font-size:13px}.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid #3a536d;background:#15273c;padding:7px 11px;border-radius:999px;font-size:11px;color:#cce8fa;white-space:nowrap}.badge:before{content:'';width:7px;height:7px;background:var(--soft);border-radius:100%}.badge.good:before{background:var(--positive)}.badge.warn:before{background:var(--amber)}.badge.bad:before{background:var(--negative)}.panel,.tile{background:linear-gradient(140deg,#122038 0%,#101a2a 100%);border:1px solid var(--line);border-radius:15px}.muted{color:var(--muted)}.tiny{font-size:11px;color:var(--muted)}.sub{font-size:12px;color:var(--muted)}.section{margin-top:22px}.section-head{display:flex;justify-content:space-between;gap:14px;align-items:end;margin:0 0 12px;flex-wrap:wrap}h2{font-size:19px;letter-spacing:-.5px;margin:0}h3{font-size:15px;letter-spacing:-.2px;margin:0 0 6px}.num{font-variant-numeric:tabular-nums}.up{color:var(--positive)}.down{color:var(--negative)}.sw{color:var(--soft)}.hw{color:var(--hard)}.neutral{color:var(--amber)}.pill{border-radius:7px;padding:4px 7px;font-size:10px;font-weight:760;display:inline-block;background:#273449;color:#bdcee0}.pill.sw-type{background:#17364a;color:#74d7f1;border:1px solid #28667b}.pill.hw-type{background:#3c2e20;color:#f8d294;border:1px solid #695035}.pill.good{background:#173a36;color:#8be3bc}.pill.mixed{background:#433923;color:#f4d893}.pill.weak{background:#412c3a;color:#ffadc0}.pill.cool{background:#19344d;color:#a2d1f7}.status-bar{border:1px solid #31516e;border-radius:11px;background:#14253b;display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:10px 13px;font-size:12px}.status-bar .dot{height:8px;width:8px;border-radius:50%;background:var(--amber);flex-shrink:0}.status-bar.good .dot{background:var(--positive)}.status-bar.bad .dot{background:var(--negative)}.status-bar .aside{margin-left:auto;color:var(--muted);font-size:11px}.toolbar{display:flex;gap:9px;flex-wrap:wrap;align-items:end;margin-top:14px}.field{display:flex;flex-direction:column;gap:5px}.field label{font-size:11px;color:var(--muted)}.control{background:#1a2a42;color:var(--text);border:1px solid #38516d;border-radius:8px;padding:8px 10px;min-height:38px;font-size:12px}.btn{background:#22334d;border:1px solid #395473;color:var(--text);border-radius:8px;padding:9px 12px;font-size:12px;min-height:37px}.btn:hover,.control:hover{border-color:#62c9e8}.btn.primary{background:#1b4a63;border-color:#368bab}.btn.outline{background:transparent}.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:16px}.tile{padding:16px}.tile .val{font-size:clamp(21px,2.4vw,31px);font-weight:850;line-height:1.2;letter-spacing:-.9px;margin:7px 0 5px}.tile .helper{color:var(--muted);font-size:11px}.sector-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.sector-card{padding:18px;position:relative;overflow:hidden}.sector-card:before{content:'';position:absolute;left:0;top:0;width:5px;height:100%;background:var(--soft)}.sector-card.hardware:before{background:var(--hard)}.sector-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}.sector-name{font-size:22px;letter-spacing:-.7px;font-weight:780}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:15px 0}.metric{background:#0d1828;border:1px solid #243750;border-radius:9px;padding:11px 9px}.metric .v{font-size:19px;font-weight:780;margin:3px 0}.metric .k{font-size:10px;color:var(--muted)}.thin-rule{height:1px;background:var(--line);margin:10px 0}.sector-below{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px;color:#adc0d5}.bar{height:7px;background:#203247;border-radius:9px;overflow:hidden;margin-top:6px}.bar>span{height:100%;display:block;border-radius:9px;background:var(--soft)}.hardware .bar>span{background:var(--hard)}.flag-text{font-size:11px;color:var(--muted);margin-top:12px}.triplets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.comparison{padding:15px}.comparison .value{font-size:25px;font-weight:800;margin:4px 0}.chart-layout{display:grid;grid-template-columns:minmax(0,1.76fr) minmax(300px,.82fr);gap:14px}.chart-panel,.detail-panel{padding:18px}.chart-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start;margin-bottom:14px}.tab-group{display:flex;flex-wrap:wrap;gap:5px}.tab{border:1px solid #384c63;border-radius:8px;background:transparent;color:#aebdd1;padding:7px 10px;font-size:11px}.tab[aria-pressed='true']{background:#183a4e;color:#dbf8ff;border-color:#5bafc4}.svg-box{position:relative}.chart{display:block;width:100%;height:310px;overflow:visible}.chart .grid{stroke:#2a3d53;stroke-width:1}.chart .base{stroke:#587287;stroke-dasharray:4,4}.chart text{fill:#97abc2;font-size:11px}.tooltip{position:absolute;pointer-events:none;background:#1b3047;border:1px solid #48657f;color:#f7fcff;border-radius:9px;padding:7px 9px;font-size:11px;display:none;z-index:4;min-width:120px;box-shadow:0 6px 22px #080d18aa}.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:#b4c7d9;margin-top:6px}.swatch{height:3px;width:12px;display:inline-block;vertical-align:middle;margin-right:5px;border-radius:4px}.detail-ticker{font-weight:840;letter-spacing:-1px;font-size:27px}.detail-name{font-size:12px;color:var(--muted)}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px;margin-top:10px}.detail-row{display:flex;justify-content:space-between;gap:7px;border-bottom:1px solid #25384d;padding:10px 0;font-size:12px}.detail-row span:first-child{color:var(--muted)}.callout{border:1px solid #304d68;background:#112a3d;border-radius:9px;padding:11px;font-size:11px;color:#bbd1e5;margin-top:12px}.callout.warning{background:#332b22;border-color:#5a4b30}.leader-panels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.table-panel{padding:0;overflow:hidden}.table-title{padding:15px 17px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.table-wrap{overflow:auto;max-width:100%}.rank-table{border-collapse:collapse;width:100%;min-width:645px;white-space:nowrap;font-variant-numeric:tabular-nums;font-size:11px}th{text-align:right;color:#a7bad2;background:#17263b;padding:9px 7px;font-size:10px;font-weight:750;border-bottom:1px solid #2d4058}th:first-child,td:first-child{text-align:left}td{padding:9px 7px;border-bottom:1px solid #203147;text-align:right}tbody tr:hover{background:#1b3045;cursor:pointer}tbody tr.active{background:#1e3a4f}tbody tr:last-child td{border-bottom:none}.code-label{font-size:12px;font-weight:800}.company{font-size:10px;color:var(--muted);margin-left:6px}.data-grid{display:grid;grid-template-columns:1.05fr 1fr 1fr;gap:14px}.data-panel{padding:17px}.data-panel h3{margin-bottom:9px}.data-panel dl{margin:0}.data-panel dl div{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #26384c;font-size:12px}.data-panel dt{color:var(--muted)}.data-panel dd{margin:0;font-variant-numeric:tabular-nums;text-align:right}.compact-table{border-collapse:collapse;width:100%;font-size:11px;white-space:nowrap}.compact-table th,.compact-table td{padding:8px 7px}.scroll{overflow-x:auto}.foot{margin-top:24px;border-top:1px solid #2a3c54;padding:15px 0;color:#8ea6be;font-size:11px}.explainer{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.explainer .panel{padding:15px}.explainer p{font-size:12px;color:#bed0e0}.hintline{color:var(--muted);font-size:11px;margin-top:8px}.empty{color:#8ca3bb;padding:17px;text-align:center;font-size:12px}.rs-alerts{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.notice{color:#e8c48c}.f-input{max-width:100%;width:100%;font-size:11px}.disabled{opacity:.55;pointer-events:none}
-@media(max-width:1120px){.data-grid{grid-template-columns:1fr 1fr}.data-panel:last-child{grid-column:1/-1}.leader-panels{grid-template-columns:1fr}.rank-table{min-width:650px}}
-@media(max-width:950px){.chart-layout{grid-template-columns:1fr}.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.sector-grid{grid-template-columns:1fr}.triplets{grid-template-columns:repeat(3,minmax(0,1fr))}.explainer{grid-template-columns:1fr 1fr}}
-@media(max-width:650px){.wrap{padding:16px 12px 38px}.tiles{gap:8px}.tile{padding:12px}.sector-card{padding:14px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.sector-below{grid-template-columns:1fr}.triplets,.data-grid,.explainer{grid-template-columns:1fr}.data-panel:last-child{grid-column:auto}.chart-panel,.detail-panel{padding:12px}.chart{height:245px}.status-bar .aside{margin-left:15px;width:100%}.field{flex:1;min-width:110px}.control{width:100%}}
-</style>
-</head>
-<body>
-<main class="wrap">
-<header class="top"><div><div class="eyebrow">AI INVESTMENT RADAR / DAILY CLOSE</div><h1>AI 투자 레이더 <span style="font-weight:400;color:#a6b8d1">2.0</span></h1><p class="lead">하드웨어와 소프트웨어의 <b>절대 상승 추세 → 시장 대비 강도 → 업종 간 우위 → 개별주 확산</b>을 함께 확인합니다. 상대강도만 상승하는 ‘덜 하락하는 장세’를 구분합니다.</p></div><span class="badge" id="asof">가격 연결 대기</span></header>
-<div class="status-bar" id="status-bar" role="status"><span class="dot"></span><span id="status-text">미국장 종가 자료 연결 중…</span><span class="aside">분할·배당 조정종가 · 실시간 시세 아님 · AI API/토큰 사용 없음</span></div>
-<div class="toolbar"><div class="field"><label for="period">비교 기간</label><select id="period" class="control"><option value="20">20거래일 (약 1개월)</option><option value="60" selected>60거래일 (약 3개월)</option><option value="120">120거래일 (약 6개월)</option><option value="250">250거래일 (약 1년)</option></select></div><div class="field"><label for="table-view">종목 표기</label><select id="table-view" class="control"><option value="BOTH">소프트웨어 + 하드웨어 동시에</option><option value="SW">소프트웨어만</option><option value="HW">하드웨어만</option></select></div><div class="grow"></div><button id="refresh" class="btn primary">↻ 최신 자료 확인</button><button id="export" class="btn">↓ 통합 순위 CSV</button><label class="btn outline" for="csv-input">가격 CSV 수동 업로드</label><input type="file" id="csv-input" accept=".csv,text/csv" hidden></div>
-<section class="tiles" aria-label="시장 핵심 현황"><div class="tile"><div class="tiny">AI 소프트웨어 · IGV</div><div class="val sw num" id="kpi-sw">—</div><div class="helper" id="kpi-sw-detail">60거래일 수익률</div></div><div class="tile"><div class="tiny">AI 하드웨어 · SMH</div><div class="val hw num" id="kpi-hw">—</div><div class="helper" id="kpi-hw-detail">60거래일 수익률</div></div><div class="tile"><div class="tiny">IGV − SMH · 같은 기간</div><div class="val num" id="kpi-rs">—</div><div class="helper">상대수익률 차이(%p), 절대수익 아님</div></div><div class="tile"><div class="tiny">시장 진단 · 최종 종합</div><div class="val" id="kpi-mode" style="font-size:19px">자료 대기</div><div class="helper" id="kpi-mode-note">상대강도만으로 판단하지 않음</div></div></section>
-<section class="section"><div class="section-head"><div><h2>업종별 절대 추세와 상대강도</h2><p class="sub">두 업종을 동시에 비교합니다. 50·200일선, SPY·QQQ 초과수익과 실제 선도주 수를 함께 반영합니다.</p></div><span class="badge warn">AI 전용 ETF 아님 · IGV=소프트웨어 / SMH=반도체</span></div><div class="sector-grid"><article class="panel sector-card" id="sw-card"><div class="empty">가격을 불러오는 중…</div></article><article class="panel sector-card hardware" id="hw-card"><div class="empty">가격을 불러오는 중…</div></article></div></section>
-<section class="section"><div class="section-head"><div><h2>상대강도가 실제 수익으로 연결되는가?</h2><p class="sub">비교 기간 내 절대 성과를 잃지 않도록 시장과 업종 모두의 수익률을 나란히 봅니다.</p></div></div><div class="triplets" id="comp-cards"><div class="panel comparison empty">가격 연결 후 표시</div></div></section>
-<section class="section chart-layout"><div class="panel chart-panel"><div class="chart-head"><div><h2 id="chart-title">업종 비교 차트</h2><p class="sub" id="chart-desc">모든 선은 시작점 100으로 정규화합니다.</p></div><div class="tab-group"><button class="tab" data-chart="absolute" aria-pressed="true">절대 성과</button><button class="tab" data-chart="market" aria-pressed="false">SPY 대비</button><button class="tab" data-chart="sector" aria-pressed="false">IGV / SMH</button><button class="tab" data-chart="stock" aria-pressed="false">선택 기업</button></div></div><div class="svg-box"><svg id="line-chart" class="chart" viewBox="0 0 850 315" role="img" aria-label="시장 수익률 비교 그래프"></svg><div id="chart-tip" class="tooltip"></div></div><div class="legend" id="legend"></div><div class="hintline" id="chart-note">가격의 방향뿐 아니라 시장 대비 우위를 함께 확인하세요.</div></div><aside class="panel detail-panel"><div class="row between"><div><div class="tiny">선택 기업 · 종목별 절대/상대 추세</div><div class="detail-ticker" id="detail-ticker">—</div><div class="detail-name" id="detail-name">표의 기업을 클릭하세요</div></div><span id="detail-type" class="pill sw-type">—</span></div><div class="row wrap-row" style="margin-top:9px"><span id="detail-status" class="pill">—</span><span id="detail-high" class="pill">—</span></div><div id="detail-metrics" class="detail-grid"></div><div id="detail-comment" class="callout">실적과 밸류에이션은 별도로 검증해야 합니다.</div></aside></section>
-<section class="section"><div class="section-head"><div><h2>AI 개별주 · 두 업종 선도주를 한눈에</h2><p class="sub">소프트웨어 13종목과 하드웨어 6종목을 <b>별도 표·명확한 업종 태그</b>로 표시합니다. 순위는 업종 내 상대 모멘텀 점수 기준이며, 실제 우열 판단에는 SPY 대비 수익률을 함께 보세요.</p></div><span class="badge">표의 종목 클릭 → 오른쪽 상세 + 차트</span></div><div class="leader-panels"><section class="panel table-panel" id="sw-section"><div class="table-title"><div><h3><span class="pill sw-type">SW · AI 소프트웨어</span> 13종목 선도주</h3><div class="sub" id="sw-summary">가격 연결 대기</div></div><span id="sw-count" class="pill">—</span></div><div class="table-wrap"><table class="rank-table"><thead><tr><th>종목 · 업종</th><th>20일</th><th>60일</th><th>SPY 대비</th><th>업종 대비</th><th>50/200일선</th><th>상대점수</th><th>추세</th></tr></thead><tbody id="sw-body"><tr><td colspan="8" class="empty">갱신 자료를 불러오는 중…</td></tr></tbody></table></div></section><section class="panel table-panel" id="hw-section"><div class="table-title"><div><h3><span class="pill hw-type">HW · AI 하드웨어</span> 6종목 선도주</h3><div class="sub" id="hw-summary">가격 연결 대기</div></div><span id="hw-count" class="pill">—</span></div><div class="table-wrap"><table class="rank-table"><thead><tr><th>종목 · 업종</th><th>20일</th><th>60일</th><th>SPY 대비</th><th>업종 대비</th><th>50/200일선</th><th>상대점수</th><th>추세</th></tr></thead><tbody id="hw-body"><tr><td colspan="8" class="empty">갱신 자료를 불러오는 중…</td></tr></tbody></table></div></section></div><p class="hintline">선도 후보(엄격 기준): 60일·120일 수익률 양수, 60일 SPY·동일 업종 ETF 상회, 종가가 50·200일 이동평균선 위. 상대점수는 0~100 업종 내 백분위로 매수 확률이 아닙니다.</p><div id="alerts" class="rs-alerts"></div></section>
-<section class="section"><div class="section-head"><div><h2>금리·실적·과거 검증</h2><p class="sub">가격 지표로 포착한 변화가 투자할 만한 신호인지 추가 확인합니다. 자료원이 다르므로 갱신일을 구분합니다.</p></div></div><div class="data-grid"><section class="panel data-panel"><h3>미국 금리 · 매크로 점검</h3><div class="sub" id="rates-asof">FRED H.15 금리 자료 연결 대기</div><dl id="rates-table"><div><dt>미국 2년물</dt><dd>—</dd></div><div><dt>미국 10년물</dt><dd>—</dd></div></dl><p class="hintline">금리는 별도 갱신·발표 시차가 있습니다. 금리 방향만으로 성장주 매수를 결정하지 않습니다.</p></section><section class="panel data-panel"><h3>실적·밸류에이션 검증</h3><div class="sub">기업별 AI 매출/FCF/이익전망/가치평가 · <span id="fund-asof" class="notice">자동 제공되지 않음</span></div><dl id="fund-info"><div><dt>선택 기업</dt><dd>—</dd></div><div><dt>매출 성장률</dt><dd>별도 확인</dd></div><div><dt>Forward P/E</dt><dd>별도 확인</dd></div></dl><p class="hintline">가격이 강해도 실제 이익·밸류에이션이 불리할 수 있습니다. 수치가 없으면 '미확인'으로 표시합니다.</p><label class="btn outline" for="fund-input" style="display:inline-block;margin-top:8px">재무 CSV 수동 업로드</label><input type="file" id="fund-input" accept=".csv,text/csv" hidden><div id="fund-message" class="tiny" style="margin-top:8px"></div></section><section class="panel data-panel"><h3>신호 발생 후 60거래일 검증</h3><div class="sub">매월 말 확인 신호에 대한 이후 성과 · 실제 투자 백테스트 아님</div><div class="scroll"><table class="compact-table" style="margin-top:8px"><thead><tr><th style="text-align:left">업종</th><th>신호 수</th><th>이후 수익 평균</th><th>SPY 초과 평균</th><th>양수 비율</th></tr></thead><tbody id="bt-body"><tr><td colspan="5" class="empty">일별 가격 이력 연결 대기</td></tr></tbody></table></div><p class="hintline" id="bt-notes">표본 구간·거래비용·신호 편향을 반드시 확인하세요.</p></section></div></section>
-<section class="section explainer"><div class="panel"><h3>① 방향을 먼저 확인</h3><p><b>IGV/SMH가 상승하더라도 IGV 자체가 하락</b>하면 소프트웨어 상승장이 아니라 상대적 방어일 수 있습니다. SPY·QQQ 대비까지 확인하세요.</p></div><div class="panel"><h3>② 확산을 확인</h3><p>소수 선도주만 급등하는지, <b>두 업종에서 선도주 수와 50일선 위 종목 비율</b>이 늘어나는지 확인하세요. 한 업종의 종목 수와 비중은 다릅니다.</p></div><div class="panel"><h3>③ 신호는 매수 버튼이 아님</h3><p>이동평균선·상대강도·과거 성과는 뒤늦게 반응하거나 속임수 신호가 나옵니다. 실적/FCF, 밸류에이션, 거시 금리, 현금 비중을 별도로 점검하세요.</p></div></section>
-<div class="foot">데이터: Yahoo Finance의 비공식 일별 조정종가(yfinance), FRED H.15 DGS2/DGS10 (옵션) · 소프트웨어 IGV/반도체 SMH는 AI 전용 지수가 아닙니다. · 월말 신호 검증은 설명적 통계이며 거래비용, 세금, 슬리피지, 룩어헤드 방지 후에도 표본 중첩·시장 국면 의존성의 한계가 있습니다. 자동 업데이트 여부는 화면의 <b>최종 거래일</b>과 GitHub Actions 로그로 확인하세요.</div>
-</main>
-<script>
+:root{color-scheme:dark;--bg:#080f1c;--surface:#101e32;--surface2:#13263d;--line:#2b415c;--muted:#97b1ca;--txt:#eef6ff;--up:#54d5aa;--down:#ff778d;--sky:#62d0ff;--amber:#ffc76b;--purple:#b39dff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 0% 0%,#152949 0,transparent 38%),var(--bg);font-family:Inter,'Noto Sans KR',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--txt);font-size:14px;line-height:1.5}
+main{max-width:1550px;margin:auto;padding:28px 25px 65px}h1,h2,h3,p{margin:0}h1{font-size:clamp(29px,4vw,43px);letter-spacing:-.05em;font-weight:780}h2{font-size:20px;letter-spacing:-.035em}h3{font-size:17px}header{display:flex;gap:20px;justify-content:space-between;align-items:start;margin-bottom:25px;flex-wrap:wrap}.eyebrow{font-size:11px;letter-spacing:.21em;color:var(--sky);font-weight:800}.subtitle{color:var(--muted);margin-top:8px;max-width:1100px;font-size:13px}
+button,select{background:#1a3049;color:var(--txt);border:1px solid #34526c;border-radius:9px;padding:10px 13px;font:inherit;cursor:pointer}button:hover,select:hover{border-color:var(--sky);background:#203b59}button:focus-visible,select:focus-visible,tr:focus-visible,a:focus-visible{outline:3px solid var(--sky);outline-offset:2px}.buttons{display:flex;flex-wrap:wrap;gap:9px}.btn-main{background:#155774;border-color:#3aa6c9;font-weight:750}a{color:#74d6ff;text-decoration:none}a:hover{text-decoration:underline}.panel{background:linear-gradient(140deg,#11223a,#0d192b);border:1px solid var(--line);border-radius:16px;padding:17px;min-width:0}.panel h3{margin-bottom:8px}.sub{color:var(--muted);font-size:12px}.tiny{color:var(--muted);font-size:11px}.up{color:var(--up)!important}.down{color:var(--down)!important}.neutral{color:var(--amber)!important}.num{font-variant-numeric:tabular-nums}.pill{font-size:11px;padding:4px 8px;border-radius:7px;display:inline-flex;align-items:center;gap:5px;background:#20334b;border:1px solid #31465f;white-space:nowrap;font-weight:680}.pill.sw{background:#153a54;color:#68d6ff;border-color:#286284}.pill.hw{background:#4a341c;color:#ffcf86;border-color:#7a5729}.pill.ok{background:#153d36;color:#83f3c8;border-color:#2f6d5f}.pill.fail{background:#4b2733;color:#ffa4b7;border-color:#874454}.pill.warn{background:#493923;color:#ffd68c;border-color:#7a6139}.pill.dim{color:var(--muted)}.toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}.stack{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.muted{color:var(--muted)}.section{margin-top:27px}.sectionhead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap}.sectionhead p{color:var(--muted);font-size:12px;margin-top:4px}
+#statusline{padding:10px 14px;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:15px 0;background:#122a42;border:1px solid #376385;border-radius:10px}.dot{width:8px;height:8px;background:var(--up);border-radius:50%;display:inline-block;box-shadow:0 0 10px #38be9688}
+.kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.kpi .label{font-size:12px;color:var(--muted)}.kpi .value{font-weight:800;font-size:clamp(21px,2.7vw,30px);margin:8px 0 5px}.kpi .note{font-size:11px;color:var(--muted)}.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.sector{border-top:3px solid var(--sky)}.sector.hw{border-top-color:var(--amber)}.sector-title{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.sector-title h3{font-size:24px;margin:5px 0}.statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}.statbox{background:#0b182a;border:1px solid #293f58;border-radius:10px;padding:10px}.statbox small{display:block;color:var(--muted);font-size:11px}.statbox strong{font-size:21px}.track{height:8px;border-radius:9px;background:#213b54;overflow:hidden;margin:6px 0 10px}.track>div{height:100%;background:var(--sky)}.hw .track>div{background:var(--amber)}.summary{border-top:1px solid var(--line);padding-top:10px;margin-top:10px;color:var(--muted);font-size:12px}
+.chartbox{min-height:270px;position:relative}.chartbox svg{display:block;width:100%;height:auto;min-height:220px;overflow:visible}.legend{display:flex;gap:13px;flex-wrap:wrap;font-size:12px;color:var(--muted)}.legend span:before{content:' ';display:inline-block;width:12px;height:3px;background:var(--color);margin:0 5px 4px 0}.chartbuttons{display:flex;gap:6px;flex-wrap:wrap}.chartbuttons button{font-size:12px;padding:7px 10px}.chartbuttons button.active{border-color:var(--sky);color:#c8f1ff;background:#17435b}
+.tablebox{overflow:auto;max-height:660px;border:1px solid var(--line);border-radius:12px;background:#0d192a}table{width:100%;border-collapse:collapse;min-width:650px}th{text-align:right;white-space:nowrap;font-size:11px;color:#afc3d8;background:#192c45;position:sticky;top:0;padding:10px 9px;z-index:2}td{text-align:right;padding:9px;border-bottom:1px solid #22364e;white-space:nowrap;font-size:12px}td:first-child,th:first-child{text-align:left}tr:hover td{background:#1c334c}tr.active td{background:#1c4760}tr[role=button]{cursor:pointer}.titlebar{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:10px}.trow{font-weight:760;color:#f5faff}.tickername{display:block;font-size:10px;color:var(--muted);font-weight:450}.scrollable{min-width:0}
+.detail-head{display:flex;gap:10px;justify-content:space-between;align-items:start;flex-wrap:wrap;margin-bottom:13px}.detail-ticker{font-size:31px;letter-spacing:-.05em}.dl{display:grid;grid-template-columns:1fr auto;gap:0}.dl dt,.dl dd{border-bottom:1px solid #243a54;padding:7px 0;margin:0;font-size:12px}.dl dt{color:#9cb4ca}.dl dd{text-align:right;font-weight:680}.warning{border:1px solid #795a35;background:#44341e8a;border-radius:10px;padding:10px;color:#fbd6a0;font-size:12px;margin-top:10px}.successbar{border:1px solid #327666;background:#17473e88;border-radius:10px;padding:10px;color:#a4f7dd;font-size:12px;margin-top:10px}.errorbar{border:1px solid #874353;background:#4823318a;border-radius:10px;padding:10px;color:#ffb8c5;font-size:12px;margin-top:10px}.signal{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #25405a;align-items:start}.signal .pill{flex-shrink:0}.source{display:inline-flex;gap:4px}.foot{color:var(--muted);font-size:12px;max-width:1200px;line-height:1.85}.footergrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.info-table{width:100%;min-width:0}.info-table td{white-space:normal}.loadcover{padding:30px;text-align:center;color:var(--muted)}.fine{font-size:11px;color:#a0b6ca}.err{color:var(--down);font-weight:700}.hide{display:none!important}
+@media(max-width:1050px){.kpi{grid-template-columns:repeat(2,1fr)}.three{grid-template-columns:1fr}.two{grid-template-columns:1fr!important}.three{grid-template-columns:1fr!important}.statgrid{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){main{padding:15px 12px 40px}.kpi{gap:8px}.kpi .panel{padding:12px}.kpi .value{font-size:22px}.statbox strong{font-size:19px}.panel{padding:12px}.footergrid{grid-template-columns:1fr}header{margin-bottom:10px}}
+</style></head><body><main>
+<header><div><div class="eyebrow">AI INVESTMENT RADAR / RULE-BASED SIGNALS · DAILY CLOSE</div><h1>AI 투자 레이더 <span style="font-weight:400;color:#a3c0df">3.0</span></h1><p class="subtitle">하드웨어·소프트웨어의 절대 추세 → 시장 대비 상대강도 → 개별주 선도 → 공식 실적·잠정 밸류에이션 → 사후 전략 검증. <b>실시간 시세·자동 주문·수익 보장 도구가 아닙니다.</b></p></div><div class="stack"><span class="pill" id="stamp">데이터 불러오는 중</span><button id="refresh" class="btn-main">↻ 최신 자료 확인</button></div></header>
+<div id="statusline"><span><span class="dot"></span> <b id="data-status">데이터 검증 중…</b></span><span class="tiny" id="health-status">가격·공시·금리 자료는 각각 갱신일이 다릅니다.</span></div>
+<div class="toolbar"><div class="stack"><label>기간 <select id="horizon"><option value="20">20거래일</option><option value="60" selected>60거래일</option><option value="120">120거래일</option><option value="250">250거래일</option></select></label><label>종목 표기 <select id="group-display"><option value="both">소프트웨어 + 하드웨어 동시</option><option value="SW">소프트웨어만</option><option value="HW">하드웨어만</option></select></label></div><div class="buttons"><button id="download">선도주 분석 CSV 저장</button><button id="explain">판정 기준·주의사항</button></div></div>
+<section class="kpi" id="kpis"><div class="panel"><div class="loadcover">시장 데이터 로드 중…</div></div></section>
+<section class="section"><div class="sectionhead"><div><h2>업종별 실제 추세·시장 대비 수익</h2><p>상대방보다 덜 하락했는지와 실제로 상승하고 있는지를 분리합니다. 50·200일선과 관찰종목의 선도 비율을 함께 봅니다.</p></div><span class="pill warn">IGV = 광범위 소프트웨어 · SMH = 반도체 ETF (AI 전용 아님)</span></div><div class="two" id="sector-cards"><div class="panel loadcover">업종 데이터 로드 중…</div></div></section>
+<section class="section"><div class="sectionhead"><div><h2>업종·시장 수익률 비교</h2><p>동일 시작점 100으로 비교합니다. 값이 100 아래면 해당 구간 손실입니다.</p></div><div class="chartbuttons" id="chart-controls"><button data-mode="absolute" class="active">절대 성과</button><button data-mode="relative">IGV/SMH 상대비율</button><button data-mode="backtest">ETF 전략 검증</button></div></div><div class="two" style="grid-template-columns:1.55fr 1fr"><div class="panel"><div id="chart" class="chartbox"><div class="loadcover">차트 데이터 대기</div></div><div class="legend" id="legend"></div></div><div class="panel"><h3>시장 국면·주요 변화</h3><div id="regime" class="sub">분석 대기</div><div id="events" style="margin-top:12px"></div><div class="warning">새로 발생한 신호는 '매수 알림'이 아닙니다. 공시·밸류에이션과 함께 확인하세요.</div></div></div></section>
+<section class="section"><div class="sectionhead"><div><h2>개별 선도주 — 소프트웨어 13종목 · 하드웨어 6종목</h2><p>SW/HW를 별도 표로 동시에 보여줍니다. 같은 10가지 조건(0~100점)으로 평가하되 점수는 미래 수익률 확률이 아닙니다.</p></div><span class="pill" id="breadth">관찰종목 확산율 확인 중</span></div><div class="two" id="universe-lists"><section class="panel scrollable" id="sw-panel"><div class="titlebar"><h3><span class="pill sw">SW</span> AI 소프트웨어 13종목</h3><span class="tiny">IGV 대비</span></div><div class="tablebox"><table><thead><tr><th>기업·하위업종</th><th>20일</th><th>60일</th><th>SPY대비</th><th>기준대비</th><th>50/200일</th><th>점수</th><th>상태</th></tr></thead><tbody id="sw-table"></tbody></table></div></section><section class="panel scrollable" id="hw-panel"><div class="titlebar"><h3><span class="pill hw">HW</span> AI 하드웨어 6종목</h3><span class="tiny">ANET은 QQQ와 비교</span></div><div class="tablebox"><table><thead><tr><th>기업·하위업종</th><th>20일</th><th>60일</th><th>SPY대비</th><th>기준대비</th><th>50/200일</th><th>점수</th><th>상태</th></tr></thead><tbody id="hw-table"></tbody></table></div></section></div></section>
+<section class="section"><div class="sectionhead"><div><h2>선택 기업 — 기술적 분석 × 재무 검증</h2><p>SEC 공시 숫자와 Yahoo 비공식 예상치의 출처를 절대 혼합해서 '검증된 가치'라고 표기하지 않습니다.</p></div></div><div class="three" style="grid-template-columns:1fr 1fr 1fr"><section class="panel"><div class="detail-head"><div><div class="tiny">SELECTED STOCK</div><h3 class="detail-ticker" id="sel-ticker">—</h3><div class="sub" id="sel-name"></div></div><div id="sel-tag"></div></div><dl class="dl" id="sel-price"></dl><div id="sel-comment" class="warning"></div></section><section class="panel"><h3>공시 실적 <span class="pill ok">SEC · 실제</span></h3><div class="sub" id="sec-date">공시 데이터 연결 대기</div><dl class="dl" id="sel-sec"></dl><div class="sub" id="sec-note"></div></section><section class="panel"><h3>밸류에이션 <span class="pill warn">비공식 · 잠정</span></h3><div class="sub" id="quote-date">Yahoo 시세 메타데이터 (불완전)</div><dl class="dl" id="sel-quote"></dl><div class="warning">Forward P/E는 애널리스트 예상 EPS 기반 비공식 값이며, SEC 확정 실적이 아닙니다. 수치가 없으면 미확인으로 둡니다.</div></section></div></section>
+<section class="section"><div class="sectionhead"><div><h2>ETF 전략 백테스트 — 실제 매매 가정</h2><p>월말 종가까지의 신호를 계산하고 다음 거래일 종가에 매매하는 단순 규칙. 거래비용·현금 보유·SPY/IGV/SMH 단순 보유와 비교합니다.</p></div><span class="pill warn">가정적 사후검증 · 예측력 확증 아님</span></div><div class="panel"><div class="toolbar"><div class="stack"><label>평가 구간 <select id="bt-period"><option value="전체">전체</option><option value="후반30%" selected>최근 30% 분리 구간</option></select></label></div><span class="sub" id="bt-desc">분석 대기</span></div><div class="tablebox"><table class="info-table"><thead><tr><th>ETF/전략</th><th>누적 수익률</th><th>연복리</th><th>MDD</th><th>연 변동성</th><th>샤프(무위험0%)</th><th>리밸런싱</th></tr></thead><tbody id="bt-table"><tr><td colspan="7">대기 중…</td></tr></tbody></table></div><div class="warning" id="bt-warning">규칙은 과거 자료에 최적화하지 않았지만 선정 자체에 사후편향이 있습니다. 거래비용은 추정치이며 세금·환율·체결 불확실성은 제외합니다.</div></div></section>
+<section class="section"><div class="three"><div class="panel"><h3>미국 국채금리 · 거시 점검</h3><div class="sub" id="rate-date">FRED H.15 연결 대기</div><dl class="dl" id="rates-detail"></dl><div class="sub">국채금리 ≠ 연준 정책금리. 데이터 발표 지연과 주말을 고려하세요.</div></div><div class="panel"><h3>자료 상태·신뢰성</h3><dl class="dl" id="quality"></dl><div class="sub">가격 데이터 실패 시 기존 자료를 최신으로 속이지 않습니다. 공시/금리는 독립 갱신됩니다.</div></div><div class="panel"><h3>AI 설비투자 선행지표 · 주의</h3><div class="sub">미국 주요 클라우드 4사 연간 전체 CAPEX (AI 전용 금액 아님)</div><div id="industry-capex" style="margin-top:9px"></div><div class="sub" id="restrictions">데이터 로딩 중</div></div></div></section>
+<section class="section" id="method"><div class="panel"><h2>지표 해석·투자 사용 원칙</h2><div class="footergrid" style="margin-top:11px"><p class="foot"><b>① 상대강도 ≠ 투자수익.</b> IGV − SMH (%p)가 양수여도 두 ETF가 하락했다면 단순히 덜 하락한 것입니다. 그래프 IGV/SMH 상대가격 비율은 수익률 차이와 수치가 다릅니다.<br><b>② 선도 후보.</b> 최근 60·120일 수익률 양수, SPY·QQQ·비교 ETF 초과수익 양수, 50일·200일선 위, 50일선이 200일선 위를 모두 충족합니다. 조건 미충족=매도 신호 아님.<br><b>③ 점수.</b> MA·상대강도·수익률 등 미리 정한 10조건×10점. 업종 간 동일하지만 매수 확률로 해석 금지.</p><p class="foot"><b>④ 근거·편향.</b> 가격 자료는 Yahoo 비공식 adjusted close. ETF는 AI 전용이 아닙니다. 19종목은 사전 등록한 관찰목록으로 지수 구성종목 전체가 아니며, 생존자편향이 존재합니다.<br><b>⑤ 공시.</b> SEC 분기/연간 실적의 기업별 회계정의가 다르고 최근 공시일을 반드시 확인합니다. TSM은 ADR/IFRS로 직접 비교에 주의하세요. P/S·Forward P/E는 Yahoo를 포함한 잠정 값입니다.<br><b>⑥ 검증.</b> ETF 백테스트는 규칙형, 매월 재평가, 다음 거래일 종가 체결, 편도 15bp 비용, 현금 수익률 0% 가정. 분리된 후반부도 완전한 독립 OOS는 아닙니다. 역사적 2026년 선정 편향, 세금/환율/슬리피지 위험이 남습니다.</p></div></div></section>
+</main><script>
 'use strict';
-const UNIVERSE={
- IGV:{name:'iShares Tech Software ETF',group:'ETF'}, SMH:{name:'VanEck Semiconductor ETF',group:'ETF'},
- SPY:{name:'S&P 500 ETF',group:'ETF'}, QQQ:{name:'Nasdaq 100 ETF',group:'ETF'},
- NET:{name:'Cloudflare',group:'SW'}, CRWD:{name:'CrowdStrike',group:'SW'}, MSFT:{name:'Microsoft',group:'SW'},
- IOT:{name:'Samsara',group:'SW'}, SNOW:{name:'Snowflake',group:'SW'}, PLTR:{name:'Palantir',group:'SW'},
- DDOG:{name:'Datadog',group:'SW'}, NOW:{name:'ServiceNow',group:'SW'}, CRM:{name:'Salesforce',group:'SW'},
- ESTC:{name:'Elastic',group:'SW'}, PATH:{name:'UiPath',group:'SW'}, APP:{name:'AppLovin',group:'SW'},
- PANW:{name:'Palo Alto Networks',group:'SW'},
- AMD:{name:'Advanced Micro Devices',group:'HW'}, ANET:{name:'Arista Networks',group:'HW'},
- AVGO:{name:'Broadcom',group:'HW'}, NVDA:{name:'NVIDIA',group:'HW'}, MU:{name:'Micron Technology',group:'HW'},
- TSM:{name:'TSMC ADR',group:'HW'}
-};
-const SW_TICKERS=Object.keys(UNIVERSE).filter(t=>UNIVERSE[t].group==='SW');
-const HW_TICKERS=Object.keys(UNIVERSE).filter(t=>UNIVERSE[t].group==='HW');
-const ETF_TICKERS=['IGV','SMH','SPY','QQQ'];
-const COLORS={IGV:'#4ccbed',SMH:'#f5bf68',SPY:'#96a9c5',QQQ:'#b8a2ff',STOCK:'#70deb4'};
 const $=id=>document.getElementById(id);
-let prices={}, dates=[], rates=[], fundamentals={}, current='CRWD', chartMode='absolute', horizon=60, dataSource='', latestPriceDate='';
-const known=t=>Object.prototype.hasOwnProperty.call(UNIVERSE,t);
-const safe=s=>String(s===null||s===undefined?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-const signed=(n,unit='%')=>Number.isFinite(n)?(n>0?'+':'')+n.toFixed(1)+unit:'—';
-const pcolor=n=>Number.isFinite(n)?(n>=0?'up':'down'):'';
-const type=t=>UNIVERSE[t]?.group||'';
-const isStock=t=>type(t)==='SW'||type(t)==='HW';
-const sector=t=>type(t)==='HW'?'SMH':'IGV';
-const val=(t,i)=>prices[t]?.[i];
-const end=()=>dates.length-1;
-const perf=(t,n,i=end())=>{
-  if(!Number.isInteger(i)||i<n||!prices[t]||!Number.isFinite(n)||n<1)return null;
-  const a=val(t,i-n),b=val(t,i);
-  return Number.isFinite(a)&&Number.isFinite(b)&&a>0?(b/a-1)*100:null;
-};
-const pp=(t,b,n,i=end())=>{const a=perf(t,n,i),bb=perf(b,n,i);return a===null||bb===null?null:a-bb;};
-function ma(t,n,i=end()){
- if(!prices[t]||i<n-1)return null;
- let sum=0;
- for(let j=i-n+1;j<=i;j++){const x=val(t,j);if(!Number.isFinite(x))return null;sum+=x;}
- return sum/n;
+const escaped=x=>String(x===null||x===undefined?'':x).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const signed=(x,unit='%')=>typeof x==='number'&&Number.isFinite(x)?`${x>0?'+':''}${x.toFixed(1)}${unit}`:'—';
+const cls=x=>x==null?'':x>=0?'up':'down';
+const fmt=(x,suffix='')=>typeof x==='number'&&Number.isFinite(x)?`${x.toLocaleString('ko-KR',{maximumFractionDigits:2})}${suffix}`:'미확인';
+const pct=x=>`<span class="${cls(x)} num">${signed(x)}</span>`;
+let A=null,F=null,R=null,current='CRWD',view='absolute',period=60;
+const palette={IGV:'#62d0ff',SMH:'#ffc76b',SPY:'#91a4bc',QQQ:'#b39dff',rotation:'#5bdfad'};
+const SECURE_PREFIX='./data/';
+async function fetchData(name){let url=SECURE_PREFIX+name+'?t='+Date.now();let r=await fetch(url,{cache:'no-store'});if(!r.ok)throw Error(`${name} HTTP ${r.status}`);return name.endsWith('.json')?r.json():r.text();}
+function shortDate(s){return s?String(s).slice(0,10):'미확인'};
+function oldDays(s){if(!s)return Infinity;return Math.floor((Date.now()-Date.parse(s+'T20:00:00Z'))/86400000)}
+function renderQuality(){if(!A)return;let age=oldDays(A.date);let stale=age>5; $('data-status').textContent=`${A.date} 종가 · ${A.sessions}거래일 · ${A.tickers}개 ETF/종목 · 분석 시각 ${A.generatedUTC.slice(0,16).replace('T',' ')} UTC`;
+ $('health-status').textContent=stale?'주의: 마지막 거래일이 5일 이상 지났습니다. Actions 로그 확인 필요':'자동 배포 데이터 수신 · 과거 종가 · 실시간 아님';$('stamp').className='pill '+(stale?'fail':'ok');$('stamp').textContent=stale?`● ${A.date} · 갱신 지연 의심`:`● ${A.date} · 가격 반영`;
+ const sc=F?.secConfigured?'SEC 설정':'SEC 미설정';const secN=F?Object.values(F.stocks||{}).filter(x=>x.secStatus==='ok').length:0;
+ $('quality').innerHTML=[['가격',A.date+(stale?' (지연 의심)':'')],['공시',F?`${sc} · 확인 ${secN}/19`:'파일 없음'],['금리',R?R.date+' (관측)':'자료 없음'],['코드 계산',A.backtest?.status==='ok'?'백테스트 가능':'표본 부족'],['수집', 'Yahoo 비공식 / SEC 조건부 / FRED 옵션']].map(([k,v])=>`<dt>${escaped(k)}</dt><dd>${escaped(v)}</dd>`).join('');
+ $('restrictions').innerHTML='<p style="margin-top:11px">주가의 직접적 선행지표가 아닙니다. HBM 가격·AI 부문 매출·EPS 컨센서스 변화는 검증된 무료 자동 공급원 부재로 연결하지 않았습니다.</p>';
+ const cap=F?.hyperscalers||{};let firms=['MSFT','GOOG','AMZN','META'];$('industry-capex').innerHTML=firms.map(t=>{let x=cap[t];return `<div class="signal"><b style="width:45px">${t}</b><div><div class="num">${x?.annualCapexUSD!=null?'$'+fmt(x.annualCapexUSD/1e9)+'B':'미확인'} ${x?.annualYoY!=null?signed(x.annualYoY):''}</div><small class="tiny">${x?.periodEnd||'SEC 미설정/공시 없음'}</small></div></div>`;}).join('');
 }
-function above(t,n,i=end()){const avg=ma(t,n,i),p=val(t,i);return avg===null?null:p>avg;}
-function rsHigh(t,b,n=60,i=end()){
- if(!prices[t]||!prices[b]||i<n)return false;
- const here=val(t,i)/val(b,i);
- for(let j=i-n;j<i;j++)if(here<=val(t,j)/val(b,j))return false;
- return true;
+function renderKpi(){let s=A.sectors.SW,h=A.sectors.HW,sw=A.etfs.IGV,hw=A.etfs.SMH;const key='r'+period;
+ let data=[['소프트웨어 IGV',sw[key],`${period}거래일 · SPY 대비 60일 ${signed(sw.vsSPY60,'%p')}`],['하드웨어 SMH',hw[key],`${period}거래일 · SPY 대비 60일 ${signed(hw.vsSPY60,'%p')}`],['IGV − SMH (같은 기간)',typeof sw[key]==='number'&&typeof hw[key]==='number'?sw[key]-hw[key]:null,'수익률 차이(%p) · 상대가격 비율과 다름'],['시장 국면',A.market.label,A.market.reason]];
+ $('kpis').innerHTML=data.map(([label,v,n],i)=>`<div class="panel"><div class="label">${escaped(label)}</div><div class="value ${typeof v==='number'?cls(v):''}">${typeof v==='number'?signed(v,i===2?'%p':'%'):escaped(v)}</div><div class="note">${escaped(n)}</div></div>`).join('');
 }
-function colorCell(n,unit='%'){return `<span class="${pcolor(n)}">${signed(n,unit)}</span>`;}
-function typeTag(t){const group=type(t);return `<span class="pill ${group==='HW'?'hw-type':'sw-type'}">${group==='HW'?'HW · 하드웨어':'SW · 소프트웨어'}</span>`;}
-function riskStats(t,benchmark='SPY',n=60,i=end()){
- if(!prices[t]||!prices[benchmark]||i<n+1)return {ir:null,mdd:null,vol:null};
- const active=[],absRet=[];let peak=val(t,i-n),minDrawdown=0;
- for(let j=i-n+1;j<=i;j++){
-  const a=Math.log(val(t,j)/val(t,j-1));
-  const b=Math.log(val(benchmark,j)/val(benchmark,j-1));
-  if(!Number.isFinite(a)||!Number.isFinite(b))return {ir:null,mdd:null,vol:null};
-  active.push(a-b);absRet.push(a);peak=Math.max(peak,val(t,j));
-  minDrawdown=Math.min(minDrawdown,(val(t,j)/peak-1)*100);
- }
- const av=a=>a.reduce((sum,x)=>sum+x,0)/a.length;
- const sd=a=>Math.sqrt(a.reduce((sum,x)=>sum+(x-av(a))**2,0)/Math.max(1,a.length-1));
- const std=sd(active),ir=std>0?Math.sqrt(252)*av(active)/std:null;
- return {ir, mdd:minDrawdown,vol:Math.sqrt(252)*sd(absRet)*100};
+function renderSectors(){let cards=[];for(const [g,name,style] of [['SW','AI 소프트웨어','sw'],['HW','AI 하드웨어','hw']]){
+ let s=A.sectors[g],n=s.count,b=s.watchlistBreadthPct||0,ratio=n?(s.above50Count/n*100):0;
+ cards.push(`<section class="panel sector ${style}"><div class="sector-title"><div><span class="tiny">${g==='SW'?'SOFTWARE / IGV':'HARDWARE / SMH'}</span><h3>${name} <span class="tiny">관찰 ${n}개</span></h3></div><span class="pill ${s.strong?'ok':s.stage==='상대적 방어'?'warn':'fail'}">${escaped(s.stage)}</span></div><div class="statgrid"><div class="statbox"><small>20거래일</small><strong class="${cls(s.r20)}">${signed(s.r20)}</strong></div><div class="statbox"><small>60거래일</small><strong class="${cls(s.r60)}">${signed(s.r60)}</strong></div><div class="statbox"><small>60일 SPY 대비</small><strong class="${cls(s.vsSPY60)}">${signed(s.vsSPY60,'%p')}</strong></div><div class="statbox"><small>60일 QQQ 대비</small><strong class="${cls(s.vsQQQ60)}">${signed(s.vsQQQ60,'%p')}</strong></div></div><div class="tiny">50일선 ${s.above50?'위':'아래'} · 200일선 ${s.above200?'위':'아래'} · ${g==='SW'?'SMH':'IGV'} 대비 ${signed(s.vsOther60,'%p')}</div><div class="summary"><div>엄격한 선도 ${s.leaders}/${n}개 (${b.toFixed(1)}%)</div><div class="track"><div style="width:${b}%"></div></div><div>50일선 위 관찰 종목 ${s.above50Count}/${n}개 (${ratio.toFixed(1)}%)</div><div class="track"><div style="width:${ratio}%"></div></div></div><p class="fine">이 비율은 선정한 관찰목록 내 비율이며 업종 전체 시장 폭을 뜻하지 않습니다.</p></section>`)
+ }$('sector-cards').innerHTML=cards.join('');$('breadth').textContent=`관찰목록 선도 ${A.sectors.SW.leaders+A.sectors.HW.leaders}/19개 · 업종 전체 아님`;
 }
-function scoreRank(values, v){
- const a=values.filter(Number.isFinite);
- if(!a.length||!Number.isFinite(v))return null;
- const below=a.filter(x=>x<v).length, equal=a.filter(x=>x===v).length;
- return 100*(below+Math.max(0,equal-1)/2)/Math.max(1,a.length-1);
+function renderTables(){for(const [g,where] of [['SW','sw-table'],['HW','hw-table']]){
+ const arr=Object.values(A.stocks).filter(x=>x.group===g).sort((a,b)=>(b.score??-1)-(a.score??-1)|| (b.vsSPY60??-999)-(a.vsSPY60??-999));
+ $(where).innerHTML=arr.map(m=>`<tr role="button" tabindex="0" class="${current===m.ticker?'active':''}" data-stock="${escaped(m.ticker)}"><td><span class="trow">${m.ticker}</span><small class="tickername">${escaped(m.name)} · ${escaped(m.subsector)}</small><span class="pill ${g==='SW'?'sw':'hw'}">${g} · ${g==='SW'?'소프트웨어':'하드웨어'}</span></td><td>${pct(m.r20)}</td><td>${pct(m.r60)}</td><td><span class="${cls(m.vsSPY60)}">${signed(m.vsSPY60,'%p')}</span></td><td><span class="${cls(m.vsOwn60)}">${signed(m.vsOwn60,'%p')}</span><small class="tickername">${m.benchmark}</small></td><td>${m.above50?'↑':'↓'} / ${m.above200?'↑':'↓'}</td><td><b class="num">${m.score??'—'}</b></td><td><span class="pill ${m.leader?'ok':m.status==='약세'?'fail':'warn'}">${escaped(m.status)}</span>${m.rsHigh60?'<br><span class="pill ok">상대가격 신고가</span>':''}</td></tr>`).join('');
+ }document.querySelectorAll('tr[data-stock]').forEach(row=>{
+ const go=()=>{current=row.dataset.stock;renderTables();renderDetail();};row.addEventListener('click',go);row.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}})
+});}
+function boxline(k,v,clazz=''){return `<dt>${escaped(k)}</dt><dd class="${clazz}">${v}</dd>`}
+function renderDetail(){let m=A.stocks[current],f=F?.stocks?.[current];if(!m)return;
+ $('sel-ticker').textContent=m.ticker;$('sel-name').textContent=m.name+' · '+m.subsector;$('sel-tag').innerHTML=`<span class="pill ${m.group==='HW'?'hw':'sw'}">${m.group==='HW'?'HW · AI 하드웨어':'SW · AI 소프트웨어'}</span>`;
+ $('sel-price').innerHTML=[boxline('60일 / 120일',pct(m.r60)+' / '+pct(m.r120)),boxline('SPY / QQQ 대비 60일',signed(m.vsSPY60,'%p')+' / '+signed(m.vsQQQ60,'%p')),boxline(m.benchmark+' 대비 60일',signed(m.vsOwn60,'%p'),cls(m.vsOwn60)),boxline('20/50/200일 이동평균 위',`${m.above20?'O':'X'} / ${m.above50?'O':'X'} / ${m.above200?'O':'X'}`),boxline('동일 기준 추세 점수',m.score==null?'미확인':m.score+' / 100'),boxline('60일 최대낙폭',signed(m.risk60.mdd)),boxline('연 변동성 (60일)',signed(m.risk60.vol)),boxline('정보비율 (SPY 대비)',fmt(m.risk60.infoRatio))].join('');
+ $('sel-comment').textContent=m.leader?'가격 조건상 선도 후보입니다. 실적·가격 평가 확인 전에는 매수 신호가 아닙니다.':'현재 선도 조건을 모두 충족하지 않습니다. 사업 가치가 없다는 뜻은 아닙니다.';
+ if(!f){$('sec-date').textContent='공식 SEC 데이터 파일 없음 · 매수 판단에 활용 불가';$('sel-sec').innerHTML=boxline('공시 실적','미연결');$('sec-note').textContent='GitHub Actions의 SEC_USER_AGENT 설정 후 SEC 자료 자동 수집을 시도합니다.';$('quote-date').textContent='잠정 시세 메타데이터 파일 없음';$('sel-quote').innerHTML=boxline('Forward P/E','미확인');return;}
+ let age=oldDays(f.revenueFiled),stale=age>160;
+ $('sec-date').textContent=f.secStatus==='not-configured'?'SEC 사용자 정보 미설정 · 공시 수집 비활성':
+     f.secStatus==='error'?'SEC 수집 오류':f.secStatus==='cached'?'이전 SEC 공시값 임시 유지 (캐시)':'SEC 제출 자료 기준';
+ let last=f.revenuePeriod?f.revenuePeriod+' 회계기간 종료 / '+f.revenueFiled+' 제출':'해당 표준항목 미확인';
+ $('sel-sec').innerHTML=[boxline('마지막 매출 데이터',escaped(last)+(stale?' <span class="down">(오래됨)</span>':'')),boxline('매출 YoY ('+(f.revenueMetric||'기준 미확인')+')',signed(f.revenueYoY)),boxline('매출 TTM (4개 독립분기)',f.revenueTTMUSD==null?'미확인':'$'+fmt(f.revenueTTMUSD/1e9)+'B'),boxline('연간 영업이익률',signed(f.opMarginAnnual)),boxline('연간 FCF 마진',signed(f.fcfMarginAnnual))].join('');
+ $('sec-note').innerHTML=f.secSource?`<a href="${escaped(f.secSource)}" target="_blank" rel="noopener noreferrer">SEC 원문 회사재무 JSON 보기</a> · ${escaped(f.secTag||'')}`:'SEC 원문 미연결. 공시가 누락되면 추정 숫자로 메우지 않습니다.';
+ $('quote-date').textContent=f.quoteAsOfUTC?'비공식 자료 취득 시각 '+f.quoteAsOfUTC.slice(0,16)+' UTC'+(oldDays(f.quoteAsOfUTC.slice(0,10))>14?' (14일 이상 지난 자료)':''):'비공식 시세 응답 없음';
+ $('sel-quote').innerHTML=[boxline('Forward P/E',fmt(f.forwardPE,'배')),boxline('P/S (참고용)',fmt(f.estimatedPS,'배')),boxline('시가총액 (Yahoo 추정)',f.marketCapUSD==null?'미확인':'$'+fmt(f.marketCapUSD/1e9)+'B'),boxline('P/S 산출',escaped(f.psSource||'미확인'))].join('');
+ if(f.adrWarning)$('quote-date').textContent+=' · ADR/IFRS 비교주의';
 }
-function makeMetrics(t){
- const s=sector(t), last=end(), p=val(t,last),m20=ma(t,20),m50=ma(t,50),m200=ma(t,200);
- return {ticker:t,name:UNIVERSE[t]?.name||t,group:type(t),s,
-   p20:perf(t,20),p60:perf(t,60),p120:perf(t,120),p250:perf(t,250),
-   spy:pp(t,'SPY',60),qqq:pp(t,'QQQ',60),own:pp(t,s,60),own20:pp(t,s,20),own120:pp(t,s,120),
-   m20,m50,m200,risk:riskStats(t),above20:m20==null?null:p>m20,above50:m50==null?null:p>m50,above200:m200==null?null:p>m200,
-   high:rsHigh(t,s,60),spyHigh:rsHigh(t,'SPY',60)};
+function getLineData(mode){if(!A)return [];
+ if(mode==='backtest'){let b=A.backtest;if(b?.status!=='ok')return [];
+    let keys=['rotation','SPY','IGV','SMH'];let d=b.chart.filter(x=>$('bt-period').value==='전체'||x.date>=b.periods['후반30%'].from);return keys.map(k=>{let first=d[0]?.[k];return {name:k,color:palette[k],values:d.map(x=>[x.date,typeof first==='number'&&first>0?x[k]/first*100:null])}});}
+ const base=A.chart;
+ if(mode==='relative'){
+  let values=base.map(x=>{const a=x.IGV,b=x.SMH;return [x.date,typeof a==='number'&&typeof b==='number'?(100+a)/(100+b)*100:null]});
+  return [{name:'IGV / SMH 상대가격비율',color:palette.IGV,values}];}
+ return ['IGV','SMH','SPY','QQQ'].map(k=>({name:k,color:palette[k],values:base.map(x=>[x.date,typeof x[k]==='number'?100+x[k]:null])}));
 }
-function allMetrics(){
- let list=[...SW_TICKERS,...HW_TICKERS].filter(t=>prices[t]).map(makeMetrics);
- for(const m of list){
-   let peers=list.filter(x=>x.group===m.group);
-   const factors=[['own',.35],['own120',.30],['spy',.20],['own20',.15]];
-   const ranks=factors.map(([name,w])=>[scoreRank(peers.map(x=>x[name]),m[name]),w]);
-   m.score=ranks.every(([x])=>x!==null)?Math.round(ranks.reduce((a,[r,w])=>a+r*w,0)):null;
-   m.leader=!!(m.p60>0&&m.p120>0&&m.spy>0&&m.own>0&&m.above50&&m.above200);
-   m.stage=m.leader?'선도 후보':(m.p20>0&&m.own20>0&&m.above50?'전환 관찰':(m.p60<0&&!m.above50?'약세':'관찰'));
- }
- return list;
+function svgChart(lines,target){if(!lines.length){target.innerHTML='<div class="loadcover">차트 자료가 부족합니다.</div>';return;}
+ const dates=lines[0].values.map(x=>x[0]);const series=lines.map(x=>({...x,values:x.values.map(y=>y[1])})).filter(x=>x.values.every(v=>typeof v==='number'&&Number.isFinite(v)));
+ if(!series.length){target.innerHTML='<div class="loadcover">가격 데이터에 결측이 있습니다.</div>';return;}
+ const W=860,H=300,L=58,R=18,T=20,B=34;let xvals=series.flatMap(a=>a.values);
+ let lo=Math.min(...xvals,100),hi=Math.max(...xvals,100),pad=Math.max(2,(hi-lo)*.13);lo=Math.floor((lo-pad)/5)*5;hi=Math.ceil((hi+pad)/5)*5;if(hi<=lo)hi=lo+5;
+ let xx=i=>L+(W-L-R)*i/Math.max(1,dates.length-1),yy=y=>T+(H-T-B)*(hi-y)/(hi-lo);
+ let svg=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${view==='relative'?'IGV와 SMH 상대비율':'ETF 수익률 차트'}"><title>AI Sector Radar chart</title>`;
+ for(let j=0;j<5;j++){let v=lo+(hi-lo)*j/4;let Y=yy(v);svg+=`<line x1="${L}" y1="${Y}" x2="${W-R}" y2="${Y}" stroke="#2b415a" stroke-width="1"/><text x="${L-7}" y="${Y+4}" fill="#9db5cd" font-size="11" text-anchor="end">${v.toFixed(0)}</text>`;}
+ let steps=Math.max(1,Math.floor(dates.length/6));for(let j=0;j<dates.length;j+=steps){svg+=`<text x="${xx(j)}" y="${H-6}" fill="#9db5cd" font-size="11" text-anchor="middle">${escaped(dates[j].slice(5))}</text>`;}
+ for(let s of series){let path=s.values.map((v,i)=>(i?'L':'M')+xx(i).toFixed(2)+' '+yy(v).toFixed(2)).join(' ');svg+=`<path d="${path}" fill="none" stroke="${s.color}" stroke-width="2.7" stroke-linejoin="round"/><circle cx="${xx(s.values.length-1)}" cy="${yy(s.values.at(-1))}" r="4.5" fill="${s.color}"/>`;}
+ svg+='</svg>';target.innerHTML=svg;
+ $('legend').innerHTML=series.map(s=>`<span style="--color:${s.color}">${escaped(s.name)} · ${(s.values.at(-1)-100>=0?'+':'')+(s.values.at(-1)-100).toFixed(1)}${view==='relative'?'%':'%'}</span>`).join('');
 }
-function sectorState(t, groupMetrics){
- const ticker=t==='SW'?'IGV':'SMH',other=t==='SW'?'SMH':'IGV';
- const r20=perf(ticker,20),r60=perf(ticker,60),vsSpy=pp(ticker,'SPY',60),vsQQQ=pp(ticker,'QQQ',60),vsOther=pp(ticker,other,60);
- const m50=above(ticker,50),m200=above(ticker,200);
- const leader=groupMetrics.filter(x=>x.leader).length;
- const above50Count=groupMetrics.filter(x=>x.above50===true).length;
- const breadth=groupMetrics.length?leader/groupMetrics.length:0;
- let status,style,reason;
- if(r20>0&&r60>0&&vsSpy>0&&vsQQQ>0&&m50===true&&m200===true&&breadth>=.3){status='주도 후보';style='good';reason='절대추세·시장 초과수익·선도주 확산 확인';}
- else if(r60>0&&m50===true&&vsSpy>0){status='초기 전환';style='cool';reason='업종 상승과 시장 대비 우위, 확산은 추가 확인';}
- else if(r60<0&&vsOther>0){status='상대적 방어';style='mixed';reason='상대 우위에도 업종 자체는 손실';}
- else if(r60<0&&m50===false){status='업종 약세';style='weak';reason='절대추세가 약하고 50일선 아래';}
- else {status='관찰';style='mixed';reason='상승/상대강도 신호가 아직 일치하지 않음';}
- return {ticker,other,r20,r60,vsSpy,vsQQQ,vsOther,m50,m200,leader,above50Count,breadth,status,style,reason,n:groupMetrics.length};
+function renderChart(){if(!A)return;let lines=getLineData(view);
+ // Chart history is 260 sessions for ETFs. Respect horizon except backtest.
+ if(view!=='backtest'&&lines.length){let days=period+1;for(let line of lines){line.values=line.values.slice(-days);let base=line.values[0]?.[1];if(typeof base==='number'&&base>0)line.values=line.values.map(([dt,v])=>[dt,typeof v==='number'?100*v/base:null]);}}
+ svgChart(lines,$('chart'));document.querySelectorAll('#chart-controls button').forEach(b=>b.classList.toggle('active',b.dataset.mode===view));}
+function renderEvents(){if(!A)return;$('regime').innerHTML=`<h3 style="font-size:24px;margin:6px 0 8px">${escaped(A.market.label)}</h3><p>${escaped(A.market.reason)}</p>`;
+ const arr=A.events||[];
+ $('events').innerHTML=`<div class="tiny">전일 종가 대비 신규 기술적 변화: <b>${arr.length}개</b></div>`+(arr.length?arr.slice(0,12).map(e=>`<div class="signal"><span class="pill ${e.kind==='주의'||e.kind==='이탈'?'fail':'ok'}">${escaped(e.kind)}</span><span>${escaped(e.message)}</span></div>`).join(''):'<div class="sub" style="margin-top:9px">선별된 신규 신호가 없습니다.</div>');
 }
-function renderSectors(metrics){
- const segments=[['SW','sw-card','sw-summary','sw-count'],['HW','hw-card','hw-summary','hw-count']];
- for(const [g,cardId,summaryId,countId] of segments){
-   const arr=metrics.filter(m=>m.group===g),s=sectorState(g,arr),soft=g==='SW';
-   const category=soft?'AI 소프트웨어':'AI 하드웨어',t=s.ticker;
-   const band=soft?'sw':'hw';
-   $(cardId).innerHTML=`<div class="sector-head"><div><div class="tiny">${soft?'SOFTWARE / IGV':'HARDWARE / SMH'} · 실제 추세</div><div class="sector-name ${band}">${category} <span class="tiny" style="font-weight:400">${arr.length}종목</span></div></div><span class="pill ${s.style}">${s.status}</span></div>
-   <div class="metrics"><div class="metric"><div class="k">20거래일</div><div class="v ${pcolor(s.r20)} num">${signed(s.r20)}</div></div>
-   <div class="metric"><div class="k">60거래일</div><div class="v ${pcolor(s.r60)} num">${signed(s.r60)}</div></div>
-   <div class="metric"><div class="k">60일 SPY 대비</div><div class="v ${pcolor(s.vsSpy)} num">${signed(s.vsSpy,'%p')}</div></div>
-   <div class="metric"><div class="k">60일 QQQ 대비</div><div class="v ${pcolor(s.vsQQQ)} num">${signed(s.vsQQQ,'%p')}</div></div></div>
-   <div class="sector-below"><div><b>50일선</b> ${s.m50===null?'자료 부족':s.m50?'종가 위':'종가 아래'} · <b>200일선</b> ${s.m200===null?'자료 부족':s.m200?'위':'아래'}</div><div><b>${soft?'SMH':'IGV'} 대비 60일</b> <span class="${pcolor(s.vsOther)}">${signed(s.vsOther,'%p')}</span></div><div><div class="row between"><span>엄격한 선도 후보</span><b>${s.leader}/${s.n}종목</b></div><div class="bar"><span style="width:${(100*s.breadth).toFixed(2)}%"></span></div></div><div><div class="row between"><span>50일선 위 기업</span><b>${s.above50Count}/${s.n}종목</b></div><div class="bar"><span style="width:${s.n?100*s.above50Count/s.n:0}%"></span></div></div></div><div class="flag-text">판정 근거: ${s.reason}. 업종 ETF는 AI만을 나타내지 않습니다.</div>`;
-   $(summaryId).textContent=`선도 후보 ${s.leader}/${s.n} · 50일선 위 ${s.above50Count}/${s.n} · ${s.reason}`;
-   $(countId).textContent=`선도 ${s.leader}/${s.n}`;
- }
- const s=sectorState('SW',metrics.filter(x=>x.group==='SW')),
-       h=sectorState('HW',metrics.filter(x=>x.group==='HW'));
- const r=pp('IGV','SMH',horizon),a=perf('IGV',horizon),b=perf('SMH',horizon);
- $('kpi-sw').textContent=signed(a);$('kpi-sw').className='val num '+pcolor(a);
- $('kpi-hw').textContent=signed(b);$('kpi-hw').className='val num '+pcolor(b);
- $('kpi-sw-detail').textContent=`${horizon}거래일 · SPY 대비 ${signed(pp('IGV','SPY',horizon),'%p')}`;
- $('kpi-hw-detail').textContent=`${horizon}거래일 · SPY 대비 ${signed(pp('SMH','SPY',horizon),'%p')}`;
- $('kpi-rs').textContent=signed(r,'%p');$('kpi-rs').className='val num '+pcolor(r);
- let title='',note='';
- if(s.status==='주도 후보'&&h.status==='주도 후보'){title='양 업종 강세';note='소프트웨어·하드웨어 모두 절대·상대 추세 양호';}
- else if(s.status==='주도 후보'){title='소프트웨어 우위';note='IGV 절대 상승 + 시장 초과 + 선도주 확산';}
- else if(h.status==='주도 후보'){title='하드웨어 우위';note='SMH 절대 상승 + 시장 초과 + 선도주 확산';}
- else if(a<0&&b<0){title='시장 방어·관찰';note='두 ETF 모두 하락. 덜 하락한 업종 ≠ 상승 주도';}
- else{title='전환 신호 관찰';note='업종 절대 성과·시장 대비·확산이 완전히 일치하지 않음';}
- $('kpi-mode').textContent=title;$('kpi-mode-note').textContent=note;
+function renderBacktest(){let b=A.backtest;if(!b||b.status!=='ok'){$('bt-table').innerHTML='<tr><td colspan="7">장기 ETF 자료 부족 · 전략 검증 불가</td></tr>';return;}
+ let which=$('bt-period').value;let q=b.periods[which];$('bt-desc').textContent=`${q.from} ~ ${q.to} · 편도 ${b.assumptions.oneWayCostBps}bp 추정 · 현금 0%`;
+ let labels=[['rotation','월간 위험관리 전환 전략'],['SPY','SPY 단순 보유'],['IGV','IGV 단순 보유'],['SMH','SMH 단순 보유'],['QQQ','QQQ 단순 보유'],['cash','현금(0%) 가정']];
+ $('bt-table').innerHTML=labels.map(([k,name])=>{let v=q[k];if(!v)return '';return `<tr><td><b>${escaped(name)}</b></td><td>${pct(v.returnPct)}</td><td>${pct(v.cagrPct)}</td><td>${pct(v.mddPct)}</td><td>${pct(v.volPct)}</td><td>${fmt(v.sharpeZeroCash)}</td><td>${v.rebalanceCount}</td></tr>`}).join('');
 }
-function renderComp(){
- const labels=[['IGV','소프트웨어','SMH'],['SMH','하드웨어','IGV'],['QQQ','기술주 벤치마크','SPY']];
- $('comp-cards').innerHTML=labels.map(([t,n,b])=>`<div class="panel comparison"><div class="tiny">${n} ${t} · ${horizon}거래일</div><div class="value ${pcolor(perf(t,horizon))}">${signed(perf(t,horizon))}</div><div class="sub">SPY 대비 <b class="${pcolor(pp(t,'SPY',horizon))}">${signed(pp(t,'SPY',horizon),'%p')}</b> · ${t==='QQQ'?'시장(SPY) 비교':`${b} 대비 <b class="${pcolor(pp(t,b,horizon))}">${signed(pp(t,b,horizon),'%p')}</b>`}</div></div>`).join('');
-}
-function sortRow(a,b){return (b.score??-1)-(a.score??-1)||(b.spy??-999)-(a.spy??-999)}
-function renderTables(metrics){
- for(const g of ['SW','HW']){
-  const arr=metrics.filter(x=>x.group===g).sort(sortRow);
-  const tbody=$(g==='SW'?'sw-body':'hw-body');
-  tbody.innerHTML=arr.map(m=>{
-   let trend=m.above50===null||m.above200===null?'데이터 부족':(m.above50&&m.above200?'50/200↑':m.above50?'50↑ / 200↓':'50↓');
-   let style=m.leader?'good':m.stage==='전환 관찰'?'cool':m.stage==='약세'?'weak':'mixed';
-   return `<tr tabindex="0" role="button" data-ticker="${m.ticker}" class="${current===m.ticker?'active':''}" aria-label="${m.ticker} 상세 보기"><td><span class="code-label">${m.ticker}</span><span class="company">${safe(m.name)}</span><div style="margin-top:4px">${typeTag(m.ticker)}</div></td><td>${colorCell(m.p20)}</td><td>${colorCell(m.p60)}</td><td>${colorCell(m.spy,'%p')}</td><td>${colorCell(m.own,'%p')}</td><td><span class="pill ${m.above50&&m.above200?'good':m.above50?'mixed':'weak'}">${trend}</span></td><td><b>${m.score??'—'}</b></td><td><span class="pill ${style}">${m.stage}</span>${m.high?'<span title="60거래일 업종 대비 상대가격 신고가" class="pill good" style="margin-left:3px">RS신고</span>':''}</td></tr>`;
-  }).join('') || '<tr><td colspan="8" class="empty">이 그룹의 데이터가 없습니다.</td></tr>';
- }
- document.querySelectorAll('tr[data-ticker]').forEach(row=>{
-  row.addEventListener('click',()=>selectStock(row.dataset.ticker));
-  row.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectStock(row.dataset.ticker);}});
- });
- const flaggers=metrics.filter(m=>m.high),leaders=metrics.filter(m=>m.leader);
- $('alerts').innerHTML=`<span class="pill cool">60일 업종 대비 상대가격 신고가 ${flaggers.length}종목</span>`+
-   flaggers.slice(0,9).map(m=>`<span class="pill ${m.group==='HW'?'hw-type':'sw-type'}">${m.ticker} · ${m.group}</span>`).join('')+
-   `<span class="pill good">엄격한 선도 후보 합계 ${leaders.length}/19</span>`;
- $('sw-section').hidden=$('table-view').value==='HW';
- $('hw-section').hidden=$('table-view').value==='SW';
-}
-function selectStock(t){
- if(!isStock(t)||!prices[t])return;
- current=t;chartMode='stock';
- renderDetail(allMetrics());renderChart();
- document.querySelectorAll('tr[data-ticker]').forEach(tr=>tr.classList.toggle('active',tr.dataset.ticker===t));
-}
-function detailLine(label,value,unit='%'){return `<div class="detail-row"><span>${label}</span><b class="${pcolor(value)} num">${signed(value,unit)}</b></div>`;}
-function renderDetail(metrics){
- let m=metrics.find(x=>x.ticker===current);
- if(!m)return;
- $('detail-ticker').textContent=m.ticker;
- $('detail-name').textContent=m.name;
- $('detail-type').className='pill '+(m.group==='HW'?'hw-type':'sw-type');
- $('detail-type').textContent=m.group==='HW'?'HW · AI 하드웨어':'SW · AI 소프트웨어';
- $('detail-status').className='pill '+(m.leader?'good':m.stage==='약세'?'weak':'mixed');$('detail-status').textContent=m.stage;
- $('detail-high').className='pill '+(m.high?'good':'cool');$('detail-high').textContent=m.high?'업종대비 60일 신고가':'업종대비 60일 신고가 아님';
- $('detail-metrics').innerHTML=detailLine('20거래일',m.p20)+detailLine('60거래일',m.p60)+detailLine('SPY 대비 60일',m.spy,'%p')+
-  detailLine('QQQ 대비 60일',m.qqq,'%p')+detailLine(m.s+' 대비 60일',m.own,'%p')+detailLine('120거래일',m.p120)+
-  `<div class="detail-row"><span>20/50/200일선</span><b>${[m.above20,m.above50,m.above200].map(x=>x===null?'—':x?'위':'아래').join(' / ')}</b></div>`+
-  `<div class="detail-row"><span>업종 내 상대모멘텀 점수</span><b>${m.score??'—'} / 100</b></div>`+
-  `<div class="detail-row"><span>60일 최대낙폭(MDD)</span><b class="down">${signed(m.risk.mdd)}</b></div>`+
-  `<div class="detail-row"><span>연율화 실현변동성(60일)</span><b>${signed(m.risk.vol)}</b></div>`+
-  `<div class="detail-row"><span>SPY 대비 정보비율(60일)</span><b>${Number.isFinite(m.risk.ir)?m.risk.ir.toFixed(2):'—'}</b></div>`;
- $('detail-comment').className='callout'+(m.leader?'':' warning');
- $('detail-comment').textContent=m.leader?'관찰용 선도 후보: 상승·시장 대비·업종 대비·이동평균 조건을 충족합니다. 다만 가격 강세만으로 실적과 밸류에이션이 확인된 것은 아닙니다.':
-   '가격조건을 모두 충족하지 못했습니다. 사업 성장성이 높아도 매수 판단 전에 추세·실적·밸류에이션을 별도로 확인하세요.';
- renderFundamental();
-}
-function chartData(){
- const last=end(),start=Math.max(0,last-horizon),dt=dates.slice(start),ix=dt.map((_,j)=>start+j);
- const normalize=t=>{
-   const base=val(t,start);if(!Number.isFinite(base)||base<=0)return null;
-   return ix.map(i=>val(t,i)/base*100);
- };
- const ratio=(t,b)=>{
-   const base=val(t,start)/val(b,start);if(!Number.isFinite(base)||base<=0)return null;
-   return ix.map(i=>100*(val(t,i)/val(b,i))/base);
- };
- const candidate=(ticker,color)=>({name:ticker,color,values:normalize(ticker)});
- let lines=[],title='',desc='',note='';
- if(chartMode==='absolute'){
-  title='업종 및 시장 절대 수익률';desc='같은 시작일 100 · IGV, SMH, SPY, QQQ의 절대 성과';
-  lines=[candidate('IGV',COLORS.IGV),candidate('SMH',COLORS.SMH),candidate('SPY',COLORS.SPY),candidate('QQQ',COLORS.QQQ)];
-  note='시작점 100보다 낮으면 비교 기간 동안 실제 손실입니다. 업종 간 상대강도와 구분해서 보세요.';
- } else if(chartMode==='market'){
-  title='시장(SPY) 대비 업종 상대가격';desc='IGV ÷ SPY / SMH ÷ SPY · 시작점 100';
-  lines=[{name:'IGV / SPY',color:COLORS.IGV,values:ratio('IGV','SPY')},{name:'SMH / SPY',color:COLORS.SMH,values:ratio('SMH','SPY')}];
-  note='선이 상승하면 SPY 대비 상대가격이 개선됩니다. 업종의 절대 수익률이 플러스라는 뜻은 아닙니다.';
- } else if(chartMode==='sector'){
-  title='소프트웨어 / 반도체 상대가격';desc='IGV ÷ SMH · 시작점 100';
-  lines=[{name:'IGV / SMH',color:COLORS.IGV,values:ratio('IGV','SMH')}];
-  note='IGV와 SMH가 동시에 하락해도 비율은 상승할 수 있습니다. 먼저 업종별 절대 추세를 확인하세요.';
- } else {
-  const bench=sector(current);title=current+' · 절대 수익 비교';desc='선택 종목 vs 자기 업종 ETF vs SPY · 시작점 100';
-  lines=[candidate(current,COLORS.STOCK),candidate(bench,bench==='IGV'?COLORS.IGV:COLORS.SMH),candidate('SPY',COLORS.SPY)];
-  note='종목이 업종과 시장을 동시에 상회하는지 확인합니다. 개별주가 업종보다 많이 오르더라도 실적은 별도 검토가 필요합니다.';
- }
- return {lines:lines.filter(x=>x.values?.length),dt,title,desc,note};
-}
-function svgEl(tag, attrs={}, inner=''){
- return '<'+tag+' '+Object.entries(attrs).map(([k,v])=>k+'="'+safe(v)+'"').join(' ')+'>'+inner+'</'+tag+'>';
-}
-function renderChart(){
- if(!dates.length)return;
- document.querySelectorAll('[data-chart]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.chart===chartMode)));
- const {lines,dt,title,desc,note}=chartData();$('chart-title').textContent=title;$('chart-desc').textContent=desc;$('chart-note').textContent=note;
- let clean=lines.filter(x=>x.values.every(Number.isFinite));
- if(!clean.length){$('line-chart').innerHTML='<text x="25" y="45" fill="#fa8799">해당 기간의 차트 데이터가 없습니다</text>';$('legend').textContent='';return;}
- const W=850,H=315,L=52,R=22,T=20,B=37,w=W-L-R,h=H-T-B;
- const values=clean.flatMap(x=>x.values).concat([100]);const rawMin=Math.min(...values),rawMax=Math.max(...values);
- const pad=Math.max(2,(rawMax-rawMin)*.11),min=Math.floor((rawMin-pad)/5)*5,max=Math.ceil((rawMax+pad)/5)*5;
- const bottom=min, top=Math.max(max,min+10);
- const X=i=>L+i/Math.max(1,dt.length-1)*w;
- const Y=v=>T+(top-v)/(top-bottom)*h;
- let img='';
- for(let k=0;k<=4;k++){let n=bottom+(top-bottom)*k/4,y=Y(n);img+=svgEl('line',{x1:L,y1:y,x2:W-R,y2:y,class:Math.abs(n-100)<.001?'base':'grid'});img+=svgEl('text',{x:L-9,y:y+4,'text-anchor':'end'},n.toFixed(0));}
- const ticks=Math.min(6,dt.length);
- for(let k=0;k<ticks;k++){let i=ticks===1?0:Math.round(k*(dt.length-1)/(ticks-1));img+=svgEl('text',{x:X(i),y:H-10,'text-anchor':k===0?'start':k===ticks-1?'end':'middle'},safe(dt[i].slice(5)));}
- clean.forEach(ln=>{const path=ln.values.map((v,i)=>(i?'L':'M')+X(i).toFixed(2)+' '+Y(v).toFixed(2)).join(' ');img+=svgEl('path',{d:path,fill:'none',stroke:ln.color,'stroke-width':3,'stroke-linecap':'round','stroke-linejoin':'round'});img+=svgEl('circle',{cx:X(ln.values.length-1),cy:Y(ln.values.at(-1)),r:4.3,fill:ln.color,stroke:'#0c1525','stroke-width':2});});
- $('line-chart').innerHTML=img;
- $('legend').innerHTML=clean.map(x=>`<span><i class="swatch" style="background:${x.color}"></i>${safe(x.name)} <b class="${pcolor(x.values.at(-1)-100)}">${signed(x.values.at(-1)-100)}</b></span>`).join('');
- const tip=$('chart-tip'),svg=$('line-chart');
- svg.onmousemove=ev=>{
-   const bb=svg.getBoundingClientRect(),loc=(ev.clientX-bb.left)/bb.width;
-   const point=Math.max(0,Math.min(dt.length-1,Math.round((loc*W-L)/w*(dt.length-1))));
-   tip.innerHTML=`<b>${safe(dt[point])}</b><div style="margin-top:3px">`+clean.map(ln=>`<div><span style="color:${ln.color}">${safe(ln.name)}</span> <b>${ln.values[point].toFixed(1)}</b></div>`).join('')+'</div>';
-   tip.style.display='block';tip.style.left=Math.min(Math.max(5,ev.clientX-bb.left+12),Math.max(5,bb.width-156))+'px';tip.style.top=Math.max(2,ev.clientY-bb.top-55)+'px';
- };
- svg.onmouseleave=()=>{tip.style.display='none';};
-}
-function renderBacktest(){
- const tbody=$('bt-body');const fwd=60,first=200;
- if(dates.length<first+fwd+40){tbody.innerHTML='<tr><td colspan="5" class="empty">과거 신호 검증에 필요한 300거래일 이상 자료가 부족합니다. 신규 스크립트를 실행해 3~4년 가격 데이터를 갱신하세요.</td></tr>';$('bt-notes').textContent='가격 이력 부족 · 이 수치를 매매 성공 확률로 해석하지 마세요.';return;}
- const monthends=[];
- for(let i=0;i<dates.length-1;i++)if(dates[i].slice(0,7)!==dates[i+1].slice(0,7))monthends.push(i);
- const stats={};
- for(const t of ['IGV','SMH']){
-  const results=[],base=[];
-  for(const i of monthends){
-   if(i<first||i+fwd>=dates.length)continue;
-   const future=perf(t,fwd,i+fwd),spyFuture=perf('SPY',fwd,i+fwd);
-   if(!Number.isFinite(future)||!Number.isFinite(spyFuture))continue;
-   base.push(future);
-   const positive20=perf(t,20,i)>0,above50=above(t,50,i)===true,avg50=ma(t,50,i),avg200=ma(t,200,i);
-   const rising=avg50!==null&&avg200!==null&&avg50>avg200;
-   const market=pp(t,'SPY',60,i)>0;
-   if(positive20&&above50&&rising&&market)results.push({return:future,excess:future-spyFuture});
-  }
-  const avg=key=>results.length?results.reduce((sum,r)=>sum+r[key],0)/results.length:null;
-  const hit=results.length?100*results.filter(r=>r.return>0).length/results.length:null;
-  stats[t]={n:results.length,total:base.length,avg:avg('return'),excess:avg('excess'),hit};
- }
- tbody.innerHTML=['IGV','SMH'].map(t=>{const s=stats[t];return `<tr><td style="text-align:left"><b class="${t==='IGV'?'sw':'hw'}">${t}</b></td><td>${s.n}회 / ${s.total}개월</td><td class="${pcolor(s.avg)}">${signed(s.avg)}</td><td class="${pcolor(s.excess)}">${signed(s.excess,'%p')}</td><td>${s.hit===null?'—':s.hit.toFixed(0)+'%'}</td></tr>`;}).join('');
- const start=dates[monthends.find(i=>i>=first)||first],lastEligible=monthends.filter(i=>i+fwd<dates.length).at(-1);
- $('bt-notes').textContent=`관측: ${start} ~ ${dates[lastEligible??end()]}. 월말에 ①종가>50일선 ②50일선>200일선 ③최근 20일 상승 ④최근 60일 SPY 대비 우위일 때, 이후 60거래일 수익률을 계산. 월별 관측의 미래 60일 구간이 서로 중첩돼 독립 표본이 아니며, 거래비용·세금·현금 비중은 반영하지 않습니다. 표본이 작아 예측력 검증은 별도 장기 백테스트가 필요합니다.`;
-}
-function showRates(){
- if(rates.length<25){$('rates-asof').textContent='금리 자료 미연결 · FRED 다운로드 실패 시 이전 가격 자료는 유지됩니다';return;}
- const x=rates.at(-1),before=rates.at(-21);
- const bps2=(x.DGS2-before.DGS2)*100,bps10=(x.DGS10-before.DGS10)*100;
- const age=Math.floor((Date.now()-Date.parse(x.Date+'T12:00:00Z'))/86400000);
- $('rates-asof').textContent=`FRED H.15 관측일 ${x.Date}${age>=6?' · 지연/오래된 자료 주의':''}`;
- $('rates-table').innerHTML=`<div><dt>미국 2년물</dt><dd>${x.DGS2.toFixed(2)}% <span class="${pcolor(bps2)}">(${signed(bps2,'bp')} / 20관측일)</span></dd></div>`+
- `<div><dt>미국 10년물</dt><dd>${x.DGS10.toFixed(2)}% <span class="${pcolor(bps10)}">(${signed(bps10,'bp')} / 20관측일)</span></dd></div>`+
- `<div><dt>10년−2년 스프레드</dt><dd>${signed((x.DGS10-x.DGS2)*100,'bp')}</dd></div>`;
-}
-function renderFundamental(){
- const f=fundamentals[current];
- if(!f||!f.AsOf){$('fund-asof').textContent='자동 제공되지 않음 · 미확인';$('fund-info').innerHTML=`<div><dt>선택 기업</dt><dd>${current} (${UNIVERSE[current]?.name||''})</dd></div><div><dt>매출 YoY</dt><dd>미확인</dd></div><div><dt>EPS 추정치 변화</dt><dd>미확인</dd></div><div><dt>Forward P/E · FCF</dt><dd>미확인</dd></div>`;return;}
- const k=v=>v===''?'미입력':safe(v);
- const url=(String(f.Source||'').startsWith('https://')||String(f.Source||'').startsWith('http://'))?String(f.Source):'';
- $('fund-asof').textContent='수동 입력 · 기준일 '+f.AsOf;
- $('fund-info').innerHTML=`<div><dt>선택 기업</dt><dd>${current} · ${safe(f.AsOf)}</dd></div><div><dt>매출 YoY</dt><dd>${k(f.RevenueYoY)}${f.RevenueYoY?'%':''}</dd></div><div><dt>EPS 추정 변화(90일)</dt><dd>${k(f.EPSRevision90d)}${f.EPSRevision90d?'%':''}</dd></div><div><dt>Forward P/E</dt><dd>${k(f.ForwardPE)}${f.ForwardPE?'배':''}</dd></div><div><dt>FCF 마진</dt><dd>${k(f.FCFMargin)}${f.FCFMargin?'%':''}</dd></div>`+
- (url?`<div><dt>검증 근거</dt><dd><a href="${safe(url)}" target="_blank" rel="noopener noreferrer">제공된 출처 보기</a></dd></div>`:'');
-}
-function parseRatesCsv(text){
- const lines=text.replace(/^\uFEFF/,'').trim().split(/\r?\n/),arr=[];
- for(const ln of lines.slice(1)){
-  const x=ln.split(',');if(!/^\d{4}-\d{2}-\d{2}$/.test(x[0]))continue;
-  const d2=Number(x[1]),d10=Number(x[2]);if(!Number.isFinite(d2)||!Number.isFinite(d10))continue;
-  arr.push({Date:x[0],DGS2:d2,DGS10:d10});
- }
- rates=arr.sort((a,b)=>a.Date.localeCompare(b.Date));showRates();
-}
-function parseFundCsv(text){
- const lines=text.replace(/^\uFEFF/,'').trim().split(/\r?\n/),headers=lines[0].split(',').map(s=>s.trim());
- const result={};
- for(const line of lines.slice(1)){
-  const cells=line.split(',');const f={};headers.forEach((h,i)=>f[h]=cells[i]?.trim()||'');
-  const ticker=f.Ticker?.toUpperCase();if(!isStock(ticker)||!/^(20\d\d-\d\d-\d\d)?$/.test(f.AsOf||''))continue;
-  result[ticker]=f;
- }
- fundamentals=result;renderFundamental();
- return Object.keys(result).length;
-}
-function parsePriceCsv(text){
- const lines=text.replace(/^\uFEFF/,'').trim().split(/\r?\n/);
- const headers=lines[0]?.split(',').map(s=>s.trim().toLowerCase());
- if(!headers||!['date','ticker','adjclose'].every(x=>headers.includes(x)))throw Error('Date,Ticker,AdjClose 헤더가 필요합니다.');
- const di=headers.indexOf('date'),ti=headers.indexOf('ticker'),pi=headers.indexOf('adjclose');
- const rows={};
- for(let i=1;i<lines.length;i++){
-  const cell=lines[i].split(',');const d=cell[di],t=cell[ti]?.trim().toUpperCase(),v=Number(cell[pi]);
-  if(!/^\d{4}-\d{2}-\d{2}$/.test(d||'')||!known(t)||!(v>0&&Number.isFinite(v)))continue;
-  (rows[d]??={})[t]=v;
- }
- const rawDates=Object.keys(rows).sort();
- const required=['IGV','SMH','SPY'];
- const tickers=Object.keys(UNIVERSE).filter(t=>rawDates.filter(d=>rows[d][t]>0).length>=25);
- let usable=rawDates.filter(d=>required.every(t=>rows[d][t]>0)&&tickers.every(t=>rows[d][t]>0));
- if(usable.length<70)throw Error('공통 거래일 70일 이상이 필요합니다. 보유 CSV의 필수 ETF와 종목 가격을 확인하세요.');
- const next={};for(const t of tickers)next[t]=usable.map(d=>rows[d][t]);
- if(!required.every(t=>next[t]))throw Error('필수 ETF IGV/SMH/SPY 데이터가 없습니다.');
- prices=next;dates=usable;latestPriceDate=dates.at(-1);
- if(!prices[current])current=SW_TICKERS.find(x=>prices[x])||HW_TICKERS.find(x=>prices[x]);
- if(!prices[current])throw Error('개별주 데이터가 없습니다.');
-}
-function status(msg,variant=''){const bar=$('status-bar');bar.className='status-bar'+(variant?' '+variant:'');$('status-text').textContent=msg;}
-function render(){
- if(!dates.length)return;
- const metrics=allMetrics();renderSectors(metrics);renderComp();renderTables(metrics);renderDetail(metrics);renderChart();renderBacktest();showRates();
- $('asof').textContent=latestPriceDate+' · '+(dataSource==='auto'?'자동 갱신 종가':dataSource==='manual'?'수동 CSV':'불러온 종가');
- $('asof').className='badge '+(dataSource==='auto'?'good':'warn');
-}
-function ageInDays(date){const a=Date.parse(date+'T12:00:00Z');return Math.floor((Date.now()-a)/86400000);}
-function afterImport(source){
- dataSource=source;const days=ageInDays(latestPriceDate);
- status(`최종 거래일 ${latestPriceDate} · ${dates.length}거래일 · ${Object.keys(prices).length}개 ETF/종목 · ${source==='auto'?'자동 데이터 반영':'수동 CSV 반영'}`+
- (days>5?' · ⚠ 5일 넘은 가격입니다':'')+(!prices.QQQ?' · ⚠ QQQ 미포함 (새 가격수집 실행 필요)':''),days>5?'bad':'good');
- render();
-}
-async function fetchRemote(path,required=false){
- const url=new URL('./'+path,window.location.href);url.searchParams.set('v',String(Date.now()));
- const response=await fetch(url,{cache:'no-store'});
- if(!response.ok){if(required)throw Error(path+' 요청 실패 · HTTP '+response.status);return null;}
- return response.text();
-}
-async function loadPrices(){
- if(location.protocol==='file:'){status('로컬 HTML에서는 자동 가격을 불러올 수 없습니다. GitHub Pages 주소로 접속하거나 CSV를 수동 업로드하세요.','bad');return;}
- status('최신 거래소 종가 불러오는 중…');
- try{const csv=await fetchRemote('data/ai_rs_latest.csv',true);parsePriceCsv(csv);afterImport('auto');}
- catch(err){status('자동 데이터 연결 실패: '+err.message+'. GitHub Actions 실행 상태와 data/ai_rs_latest.csv를 확인하세요.','bad');}
-}
-async function loadRates(){try{const csv=await fetchRemote('data/us_treasury_latest.csv');if(csv)parseRatesCsv(csv);}catch(err){$('rates-asof').textContent='FRED 데이터 없음 · 주가 데이터에는 영향 없음';}}
-async function loadFund(){try{const csv=await fetchRemote('data/fundamentals.csv');if(csv)parseFundCsv(csv);}catch(_){/* optional */}}
-function exportRankings(){
- if(!dates.length)return;
- const rows=allMetrics().sort((a,b)=>a.group.localeCompare(b.group)||sortRow(a,b));
- const fields=['Date','Ticker','Name','Group','Ret20Pct','Ret60Pct','VsSPY60PP','VsQQQ60PP','VsOwnSector60PP','Ret120Pct','Ret250Pct','AboveMA20','AboveMA50','AboveMA200','RS60High','IR60VsSPY','MDD60Pct','Vol60AnnualPct','ScoreWithinGroup','Leader','Stage'];
- const result=[fields.join(',')];
- for(const r of rows){const cols=[latestPriceDate,r.ticker,'"'+r.name.replaceAll('"','""')+'"',r.group,r.p20,r.p60,r.spy,r.qqq,r.own,r.p120,r.p250,r.above20,r.above50,r.above200,r.high,r.risk.ir,r.risk.mdd,r.risk.vol,r.score,r.leader,r.stage];result.push(cols.map(v=>typeof v==='number'?v.toFixed(3):v==null?'':v).join(','));}
- const blob=new Blob(['\uFEFF'+result.join('\r\n')],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='ai_sector_radar_'+latestPriceDate+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);
-}
-$('period').addEventListener('change',ev=>{horizon=Number(ev.target.value);render();});
-$('table-view').addEventListener('change',()=>{if(dates.length)renderTables(allMetrics());});
-$('refresh').addEventListener('click',()=>{loadPrices();loadRates();loadFund();});
-$('export').addEventListener('click',exportRankings);
-document.querySelectorAll('[data-chart]').forEach(btn=>btn.addEventListener('click',()=>{chartMode=btn.dataset.chart;renderChart();}));
-$('csv-input').addEventListener('change',async ev=>{const f=ev.target.files?.[0];if(!f)return;try{parsePriceCsv(await f.text());afterImport('manual');}catch(err){status('CSV 오류: '+err.message,'bad');}ev.target.value='';});
-$('fund-input').addEventListener('change',async ev=>{const f=ev.target.files?.[0];if(!f)return;try{const n=parseFundCsv(await f.text());$('fund-message').textContent=n+'종목의 수동 입력 자료를 이 브라우저에 반영했습니다. 재접속 시 유지하려면 저장소 data/fundamentals.csv로 올려주세요.';}catch(err){$('fund-message').textContent=String(err);}ev.target.value='';});
-loadPrices();loadRates();loadFund();
-</script>
-</body></html>
+function parseRates(text){const rows=text.replace(/^\uFEFF/,'').trim().split(/\r?\n/).slice(1);let parsed=rows.map(s=>s.split(',')).filter(x=>x.length>=3&&/^\d{4}-\d\d-\d\d$/.test(x[0])&&Number.isFinite(Number(x[1]))&&Number.isFinite(Number(x[2]))).map(x=>({Date:x[0],DGS2:Number(x[1]),DGS10:Number(x[2])}));if(!parsed.length)return null;let end=parsed.at(-1),before=parsed.at(Math.max(0,parsed.length-21));return {date:end.Date,d2:end.DGS2,d10:end.DGS10,bp2:Math.round((end.DGS2-before.DGS2)*100),bp10:Math.round((end.DGS10-before.DGS10)*100)};}
+function renderRates(){if(!R){$('rate-date').textContent='자료 없음 · 가격 분석과 독립';$('rates-detail').innerHTML=boxline('FRED','미확인');return;}$('rate-date').textContent=`FRED H.15 관측 ${R.date} ${oldDays(R.date)>8?'(오래됨)':''}`;
+ $('rates-detail').innerHTML=[boxline('미국 2년물',R.d2.toFixed(2)+'% ('+signed(R.bp2,'bp')+'/20관측일)'),boxline('미국 10년물',R.d10.toFixed(2)+'% ('+signed(R.bp10,'bp')+'/20관측일)'),boxline('장단기 금리차',signed((R.d10-R.d2)*100,'bp'))].join('');}
+function downloadCsv(){if(!A)return;const headers=['Ticker','Group','Subsector','Comparator','20dReturn','60dReturn','VsSPY60pp','VsQQQ60pp','VsComparator60pp','Above50','Above200','Score','Leader','PriceAsOf'];
+ const rows=[headers,...Object.values(A.stocks).map(x=>[x.ticker,x.group,x.subsector,x.benchmark,x.r20,x.r60,x.vsSPY60,x.vsQQQ60,x.vsOwn60,x.above50,x.above200,x.score,x.leader,A.date])];
+ const str=rows.map(r=>r.map(v=>'"'+String(v===null?'':v).replaceAll('"','""')+'"').join(',')).join('\r\n');const blob=new Blob(['\uFEFF'+str],{type:'text/csv;charset=utf-8'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='AI_Radar_3_'+A.date+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);}
+function render(){renderQuality();renderKpi();renderSectors();renderTables();renderDetail();renderBacktest();renderChart();renderEvents();renderRates();}
+async function load(){ $('data-status').textContent='데이터 연결 중…';
+ let outcomes=await Promise.allSettled([fetchData('analysis_latest.json'),fetchData('fundamentals_latest.json'),fetchData('us_treasury_latest.csv')]);
+ A=outcomes[0].status==='fulfilled'?outcomes[0].value:null;F=outcomes[1].status==='fulfilled'?outcomes[1].value:null;R=outcomes[2].status==='fulfilled'?parseRates(outcomes[2].value):null;
+ if(!A||A.version!=='3.0'||!A.stocks||!A.sectors){$('data-status').textContent='가격 분석 데이터 미연결 — Actions를 먼저 성공시켜야 합니다';$('kpis').innerHTML='<div class="panel loadcover">데이터가 아직 생성되지 않았습니다. GitHub Actions에서 새 버전을 실행하세요. 시세를 임의로 보여주지 않습니다.</div>';$('health-status').textContent=outcomes[0].status==='rejected'?String(outcomes[0].reason):'JSON 형식 불일치';return;}
+ render();}
+$('refresh').addEventListener('click',load);$('download').addEventListener('click',downloadCsv);$('explain').addEventListener('click',()=>$('method').scrollIntoView({behavior:'smooth'}));
+$('horizon').addEventListener('change',e=>{period=Number(e.target.value);if(A){renderKpi();renderChart();}});
+$('group-display').addEventListener('change',e=>{$('sw-panel').classList.toggle('hide',e.target.value==='HW');$('hw-panel').classList.toggle('hide',e.target.value==='SW');});
+$('bt-period').addEventListener('change',()=>{renderBacktest();if(view==='backtest')renderChart();});
+document.querySelectorAll('#chart-controls button').forEach(b=>b.addEventListener('click',()=>{view=b.dataset.mode;renderChart();}));
+load();
+</script></body></html>
