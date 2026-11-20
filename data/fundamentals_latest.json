@@ -1,15 +1,15 @@
 {
   "version": "3.0",
-  "generatedUTC": "2026-11-20T07:55:26.823913+00:00",
-  "secConfigured": false,
+  "generatedUTC": "2026-11-20T08:04:16.340618+00:00",
+  "secConfigured": true,
   "notes": [
-    "SEC_USER_AGENT not configured: official SEC feed disabled"
+    "SEC ticker map failed: 403 Client Error: Forbidden for url: https://www.sec.gov/files/company_tickers.json"
   ],
   "stocks": {
     "CRWD": {
       "ticker": "CRWD",
       "group": "SW",
-      "secStatus": "not-configured",
+      "secStatus": "unavailable",
       "revenueYoY": null,
       "revenuePeriod": "",
       "revenueFiled": "",
@@ -23,14 +23,14 @@
       "yahooPS": 46.2,
       "marketCapUSD": 249287180288,
       "quoteSource": "Yahoo Finance (unofficial; estimates not verified)",
-      "quoteAsOfUTC": "2026-11-20T07:55:21.004684+00:00",
+      "quoteAsOfUTC": "2026-11-20T08:04:10.675815+00:00",
       "estimatedPS": 46.2,
       "psSource": "Yahoo Finance unofficial PS estimate"
     },
     "NET": {
       "ticker": "NET",
       "group": "SW",
-      "secStatus": "not-configured",
+      "secStatus": "unavailable",
       "revenueYoY": null,
       "revenuePeriod": "",
       "revenueFiled": "",
@@ -44,14 +44,14 @@
       "yahooPS": 39.83,
       "marketCapUSD": 108836560896,
       "quoteSource": "Yahoo Finance (unofficial; estimates not verified)",
-      "quoteAsOfUTC": "2026-11-20T07:55:21.339741+00:00",
+      "quoteAsOfUTC": "2026-11-20T08:04:10.970286+00:00",
       "estimatedPS": 39.83,
       "psSource": "Yahoo Finance unofficial PS estimate"
     },
     "MSFT": {
       "ticker": "MSFT",
       "group": "SW",
-      "secStatus": "not-configured",
+      "secStatus": "unavailable",
       "revenueYoY": null,
       "revenuePeriod": "",
       "revenueFiled": "",
@@ -65,14 +65,14 @@
       "yahooPS": 10.68,
       "marketCapUSD": 3700472676352,
       "quoteSource": "Yahoo Finance (unofficial; estimates not verified)",
-      "quoteAsOfUTC": "2026-11-20T07:55:21.644130+00:00",
+      "quoteAsOfUTC": "2026-11-20T08:04:11.261394+00:00",
       "estimatedPS": 10.68,
       "psSource": "Yahoo Finance unofficial PS estimate"
     },
     "APP": {
       "ticker": "APP",
       "group": "SW",
-      "secStatus": "not-configured",
+      "secStatus": "unavailable",
       "revenueYoY": null,
       "revenuePeriod": "",
       "revenueFiled": "",
@@ -86,14 +86,14 @@
       "yahooPS": 16.5,
       "marketCapUSD": 125577658368,
       "quoteSource": "Yahoo Finance (unofficial; estimates not verified)",
-      "quoteAsOfUTC": "2026-11-20T07:55:21.950384+00:00",
+      "quoteAsOfUTC": "2026-11-20T08:04:11.559477+00:00",
       "estimatedPS": 16.5,
       "psSource": "Yahoo Finance unofficial PS estimate"
     },
     "IOT": {
       "ticker": "IOT",
       "group": "SW",
-      "secStatus": "not-configured",
+      "secStatus": "unavailable",
       "revenueYoY": null,
       "revenuePeriod": "",
       "revenueFiled": "",
@@ -107,14 +107,14 @@
       "yahooPS": 12.17,
       "marketCapUSD": 22487240704,
       "quoteSource": "Yahoo Finance (unofficial; estimates not verified)",
-      "quoteAsOfUTC": "2026-11-20T07:55:22.252776+00:00",
+      "quoteAsOfUTC": "2026-11-20T08:04:11.849544+00:00",
       "estimatedPS": 12.17,
       "psSource": "Yahoo Finance unofficial PS estimate"
     },
     "ESTC": {
       "ticker": "ESTC",
       "group": "SW",
-      "secStatus": "not-configured",
+      "secStatus": "unavailable",
       "revenueYoY": null,
       "revenuePeriod": "",
       "revenueFiled": "",
@@ -128,14 +128,14 @@
       "yahooPS": 4.49,
       "marketCapUSD": 8089466880,
       "quoteSource": "Yahoo Finance (unofficial; estimates not verified)",
-      "quoteAsOfUTC": "2026-11-20T07:55:22.558387+00:00",
+      "quoteAsOfUTC": "2026-11-20T08:04:12.219729+00:00",
       "estimatedPS": 4.49,
       "psSource": "Yahoo Finance unofficial PS estimate"
     },
     "PANW": {
       "ticker": "PANW",
       "group": "SW",
-      "secStatus": "not-configured",
+      "secStatus": "unavailable",
       "revenueYoY": null,
       "revenuePeriod": "",
       "revenueFiled": "",
@@ -149,14 +149,14 @@
       "yahooPS": 25.8,
       "marketCapUSD": 296174288896,
       "quoteSource": "Yahoo Finance (unofficial; estimates not verified)",
-      "quoteAsOfUTC": "2026-11-20T07:55:22.863920+00:00",
+      "quoteAsOfUTC": "2026-11-20T08:04:12.547252+00:00",
       "estimatedPS": 25.8,
       "psSource": "Yahoo Finance unofficial PS estimate"
     },
     "CRM": {
       "ticker": "CRM",
       "group": "SW",
-      "secStatus": "not-configured",
+      "secStatus": "unavailable",
       "revenueYoY": null,
       "revenuePeriod": "",
       "revenueFiled": "",
@@ -170,14 +170,14 @@
       "yahooPS": 3.43,
       "marketCapUSD": 150864134144,
       "quoteSource": "Yahoo Finance (unofficial; estimates not verified)",
-      "quoteAsOfUTC": "2026-11-20T07:55:23.171250+00:00",
+      "quoteAsOfUTC": "2026-11-20T08:04:12.841707+00:00",
       "estimatedPS": 3.43,
       "psSource": "Yahoo Finance unofficial PS estimate"
     },
     "PLTR": {
       "ticker": "PLTR",
       "group": "SW",
-      "secStatus": "not-configured",
+      "secStatus": "unavailable",
       "revenueYoY": null,
       "revenuePeriod": "",
       "revenueFiled": "",
@@ -191,14 +191,14 @@
       "yahooPS": 50.81,
       "marketCapUSD": 370291572736,
       "quoteSource": "Yahoo Finance (unofficial; estimates not verified)",
-      "quoteAsOfUTC": "2026-11-20T07:55:23.483187+00:00",
+      "quoteAsOfUTC": "2026-11-20T08:04:13.135019+00:00",
       "estimatedPS": 50.81,
       "psSource": "Yahoo Finance unofficial PS estimate"
     },
     "SNOW": {
       "ticker": "SNOW",
       "group": "SW",
-      "secStatus": "not-configured",
+      "secStatus": "unavailable",
       "revenueYoY": null,
       "revenuePeriod": "",
       "revenueFiled": "",
@@ -212,14 +212,14 @@
       "yahooPS": 17.44,
       "marketCapUSD": 94758551552,
       "quoteSource": "Yahoo Finance (unofficial; estimates not verified)",
-      "quoteAsOfUTC": "2026-11-20T07:55:23.838586+00:00",
+      "quoteAsOfUTC": "2026-11-20T08:04:13.460978+00:00",
       "estimatedPS": 17.44,
       "psSource": "Yahoo Finance unofficial PS estimate"
     },
     "PATH": {
       "ticker": "PATH",
       "group": "SW",
-      "secStatus": "not-configured",
+      "secStatus": "unavailable",
       "revenueYoY": null,
       "revenuePeriod": "",
       "revenueFiled": "",
@@ -233,14 +233,14 @@
       "yahooPS": 3.4,
       "marketCapUSD": 5852575232,
       "quoteSource": "Yahoo Finance (unofficial; estimates not verified)",
-      "quoteAsOfUTC": "2026-11-20T07:55:24.144042+00:00",
+      "quoteAsOfUTC": "2026-11-20T08:04:13.758356+00:00",
       "estimatedPS": 3.4,
       "psSource": "Yahoo Finance unofficial PS estimate"
     },
     "DDOG": {
       "ticker": "DDOG",
       "group": "SW",
-      "secStatus": "not-configured",
+      "secStatus": "unavailable",
       "revenueYoY": null,
       "revenuePeriod": "",
       "revenueFiled": "",
@@ -254,14 +254,14 @@
       "yahooPS": 14.05,
       "marketCapUSD": 60099145728,
       "quoteSource": "Yahoo Finance (unofficial; estimates not verified)",
-      "quoteAsOfUTC": "2026-11-20T07:55:24.449979+00:00",
+      "quoteAsOfUTC": "2026-11-20T08:04:14.079290+00:00",
       "estimatedPS": 14.05,
       "psSource": "Yahoo Finance unofficial PS estimate"
     },
     "NOW": {
       "ticker": "NOW",
       "group": "SW",
-      "secStatus": "not-configured",
+      "secStatus": "unavailable",
       "revenueYoY": null,
       "revenuePeriod": "",
       "revenueFiled": "",
@@ -275,14 +275,14 @@
       "yahooPS": 5.98,
       "marketCapUSD": 92239683584,
       "quoteSource": "Yahoo Finance (unofficial; estimates not verified)",
-      "quoteAsOfUTC": "2026-11-20T07:55:24.763096+00:00",
+      "quoteAsOfUTC": "2026-11-20T08:04:14.373082+00:00",
       "estimatedPS": 5.98,
       "psSource": "Yahoo Finance unofficial PS estimate"
     },
     "ANET": {
       "ticker": "ANET",
       "group": "HW",
-      "secStatus": "not-configured",
+      "secStatus": "unavailable",
       "revenueYoY": null,
       "revenuePeriod": "",
       "revenueFiled": "",
@@ -296,14 +296,14 @@
       "yahooPS": 20.15,
       "marketCapUSD": 239528443904,
       "quoteSource": "Yahoo Finance (unofficial; estimates not verified)",
-      "quoteAsOfUTC": "2026-11-20T07:55:25.106514+00:00",
+      "quoteAsOfUTC": "2026-11-20T08:04:14.661471+00:00",
       "estimatedPS": 20.15,
       "psSource": "Yahoo Finance unofficial PS estimate"
     },
     "AMD": {
       "ticker": "AMD",
       "group": "HW",
-      "secStatus": "not-configured",
+      "secStatus": "unavailable",
       "revenueYoY": null,
       "revenuePeriod": "",
       "revenueFiled": "",
@@ -317,14 +317,14 @@
       "yahooPS": 17.82,
       "marketCapUSD": 809641574400,
       "quoteSource": "Yahoo Finance (unofficial; estimates not verified)",
-      "quoteAsOfUTC": "2026-11-20T07:55:25.415928+00:00",
+      "quoteAsOfUTC": "2026-11-20T08:04:14.981517+00:00",
       "estimatedPS": 17.82,
       "psSource": "Yahoo Finance unofficial PS estimate"
     },
     "AVGO": {
       "ticker": "AVGO",
       "group": "HW",
-      "secStatus": "not-configured",
+      "secStatus": "unavailable",
       "revenueYoY": null,
       "revenuePeriod": "",
       "revenueFiled": "",
@@ -338,14 +338,14 @@
       "yahooPS": 18.57,
       "marketCapUSD": 1654778757120,
       "quoteSource": "Yahoo Finance (unofficial; estimates not verified)",
-      "quoteAsOfUTC": "2026-11-20T07:55:25.757940+00:00",
+      "quoteAsOfUTC": "2026-11-20T08:04:15.271398+00:00",
       "estimatedPS": 18.57,
       "psSource": "Yahoo Finance unofficial PS estimate"
     },
     "TSM": {
       "ticker": "TSM",
       "group": "HW",
-      "secStatus": "not-configured",
+      "secStatus": "unavailable",
       "revenueYoY": null,
       "revenuePeriod": "",
       "revenueFiled": "",
@@ -359,7 +359,7 @@
       "yahooPS": 0.37,
       "marketCapUSD": 1826105196544,
       "quoteSource": "Yahoo Finance (unofficial; estimates not verified)",
-      "quoteAsOfUTC": "2026-11-20T07:55:26.063340+00:00",
+      "quoteAsOfUTC": "2026-11-20T08:04:15.566266+00:00",
       "estimatedPS": 0.37,
       "psSource": "Yahoo Finance unofficial PS estimate",
       "adrWarning": "TSM은 ADR·IFRS 자료. USD·원주식 비율 단순 환산 금지."
@@ -367,7 +367,7 @@
     "MU": {
       "ticker": "MU",
       "group": "HW",
-      "secStatus": "not-configured",
+      "secStatus": "unavailable",
       "revenueYoY": null,
       "revenuePeriod": "",
       "revenueFiled": "",
@@ -381,14 +381,14 @@
       "yahooPS": 5.87,
       "marketCapUSD": 781179879424,
       "quoteSource": "Yahoo Finance (unofficial; estimates not verified)",
-      "quoteAsOfUTC": "2026-11-20T07:55:26.368560+00:00",
+      "quoteAsOfUTC": "2026-11-20T08:04:15.899453+00:00",
       "estimatedPS": 5.87,
       "psSource": "Yahoo Finance unofficial PS estimate"
     },
     "NVDA": {
       "ticker": "NVDA",
       "group": "HW",
-      "secStatus": "not-configured",
+      "secStatus": "unavailable",
       "revenueYoY": null,
       "revenuePeriod": "",
       "revenueFiled": "",
@@ -402,11 +402,24 @@
       "yahooPS": 9.74,
       "marketCapUSD": 3524978802688,
       "quoteSource": "Yahoo Finance (unofficial; estimates not verified)",
-      "quoteAsOfUTC": "2026-11-20T07:55:26.673781+00:00",
+      "quoteAsOfUTC": "2026-11-20T08:04:16.190460+00:00",
       "estimatedPS": 9.74,
       "psSource": "Yahoo Finance unofficial PS estimate"
     }
   },
-  "hyperscalers": {},
+  "hyperscalers": {
+    "MSFT": {
+      "status": "missing CIK"
+    },
+    "GOOG": {
+      "status": "missing CIK"
+    },
+    "AMZN": {
+      "status": "missing CIK"
+    },
+    "META": {
+      "status": "missing CIK"
+    }
+  },
   "disclaimer": "SEC filing data (historical reported) vs Yahoo (unverified forward estimates); never used in historical backtest"
 }
